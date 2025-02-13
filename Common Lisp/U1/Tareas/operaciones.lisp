@@ -1,4 +1,4 @@
-; tarea
+; tareaa
 ; 5 áreas 5 volúmenes, una función para cada una 
 ; buscar funciones primitivas de clisp (princ fromat, etc) todas las que puedas encontrar
 
