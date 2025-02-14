@@ -2,9 +2,6 @@
 
 ; 1 Problemas con car y cdr
 
-;(cdar '((2 5) (4 3) 3 2 3))
-;(caddr '((2 5) (4 3) 3 2 3))
-;(cadddr '((2 5) (4 3) 3 2 3))
 ;- `car` → Devuelve el primer elemento de una lista
 ;- `cdr` → Devuelve la cola de una lista
 
