@@ -58,4 +58,3 @@
 
 ---
 
-Estas funciones forman la base del lenguaje **Common Lisp** y son esenciales para programar en **CLISP**.
