@@ -1,5 +1,3 @@
-
-
 ; 1 Problemas con car y cdr
 
 ;- `car` → Devuelve el primer elemento de una lista
@@ -20,6 +18,8 @@
 ;  Lista: ((1 (2 3)) (4 (5 6))) → Extraer 6
 (cadr(cadr(cadr '((1 (2 3)) (4 (5 6))))))
 
+(cadr(cadadr '((1 (2 3)) (4 (5 6)))))
+
 ;  Lista: (((a b) c) d e) → Extraer c
 (cadar '(((a b) c) d e))
 
@@ -28,21 +28,25 @@
 
 ;  Lista: ((p (q (r s))) t u) → Extraer (r s)
 (cadr(cadr(car '((p (q (r s))) t u))))
+(car(cdadar '((p (q (r s))) t u)))
 
 ;  Lista: (((a) b) (c (d e)) f) → Extraer d
 (caadr(cadr '(((a) b) (c (d e)) f)))
 
 ;  Lista: ((1 (2 (3 4))) (5 6)) → Extraer 3
 (caadr(cadr(car '((1 (2 (3 4))) (5 6)))))
+(caar(cdadar '((1 (2 (3 4))) (5 6))))
 
 ;  Lista: (((x) (y)) ((z) (w))) → Extraer (w)
 (cadr(cadr '(((x) (y)) ((z) (w)))))
 
 ;  Lista: ((a (b (c d))) (e f)) → Extraer c
 (caadr(cadr(car '((a (b (c d))) (e f)))))
+(caar(cdadar '((a (b (c d))) (e f))))
 
 ;  Lista: ((1 (2 (3 (4 5)))) (6 7)) → Extraer 4
 (caadr(cadr(cadr(car '((1 (2 (3 (4 5)))) (6 7))))))
+(caadar(cdadar ' ((1 (2 (3 (4 5)))) (6 7))))
 
 ;  Lista: (((a b) c) ((d e) f) ((g h) i)) → Extraer g
 (caaadr(cdr '(((a b) c) ((d e) f) ((g h) i))))
