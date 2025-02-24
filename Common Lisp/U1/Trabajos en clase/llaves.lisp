@@ -5,32 +5,33 @@
 ; (cdr (assoc 'living-room *nodes*))
 ; (cdr (assoc 'living-room *nodes*))
 ; Analizar los niveles
-(defparameter *nodes* '((preal
-                        (alto (cpelo (VCarranza VFox))) 
-                        (bajo (BJuarez))
-                        )
-                        (pnreal
-                        (bob)
-                        (patricio)
-                        (pantera-rosa)
-                        ) 
-                        (kimera 
-                            (k1) 
-                            (k2)
-                        )
-                        (pextraterrestre
-                            (ex1)
-                            (ex2)
-                        )
+(defparameter *nodes* '(
+                        (femenino (
+                            (fuego(azula))
+                            (tierra(top))
+                            (agua (katara))
                         ))
-
+                        (masculino (
+                            (aire (Hola rayo masculino))
+                            (fuego (Hola fuego))
+                            (tierra (Hola tierra))
+                            (agua (poder de agua))
+                        ))
+                        (alien (
+                            (marte (Hola vengo de marte))
+                        ))
+))
 ; Función que vaya preguntando, es real, no real, etc., recorrer cada nodo y aplicar un assoc
 
-(defun preguntar-persona (respuesta)
+(defun preguntar (lista) 
+    (format t "Tu personaje es ~a ?" (caar lista))
+    (setq a (read))
 
-    (princ Tu personaje es)
-    (case respuesta)
-        `(real ,(car *nodes*))
-        `(noreal)
+    (if (eql "si" a)
+        (preguntar (car lista)) 
+    )
+    
+    (if lista
+        (preguntar (cdr lista)) 
     )
 )
