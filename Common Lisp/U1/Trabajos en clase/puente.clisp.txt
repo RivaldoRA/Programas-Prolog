@@ -1,0 +1,8 @@
+; Cuatro personas deben cruzar un puente de noche
+; pero solo tienen una linterna y el puente es demasiado peligroso
+; el puente solo soporta un máximo de dos personas a la vez
+; y cuando dos cruzan juntos, deben moverse a la velocidad del más lento
+; cada persona tiene una velocidad de cruce diferente, por ejemplo la persona A puede cruzar en 1 min
+; la B en 2 min, la persona C puede cruzar en 5 min y la persona D puede en 10 min
+; Las reglas son las siguientes, no pueden cruzar sin la linterna, solo dos personas pueden cruzar a la vez
+; El tiempo total es el de la persona más lenta que cruza

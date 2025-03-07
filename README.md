@@ -260,3 +260,83 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
       (+ 1 (divide (- x y) y))))
 
 ```
+
+
+## variables individual, constantes individual, cuantificadores existencial universal, propiedades, relacion , dominio del discruso
+
+La Tierra es un planeta, 
+Constante individiual: Tierra
+Propiedad: Planeta
+Planeta(Tierra)
+
+La Luna no es un planeta
+Constante individual: Luna
+No tiene la propiedad de ser planeta
+¬Planeta(Luna)
+
+La Luna es un satelite
+Constante individual: Luna
+Propiedad: Satélite
+Satelite(Luna)
+
+La Tierra gira alrededor del Sol.
+Constante individual: Tierra y Sol
+Propiedad: Gira alrededor
+Gira_alrededor(Tierra, Sol)
+
+Todo planeta es un satélite.
+Variable individual: Planeta
+Cuantificador universal
+∀xPlaneta(X) ^ Satelite(X)
+
+Todo planeta gira alrededor del Sol.
+Variable individual: Planeta
+Cuantificador universal
+∀x(Planeta(X) -> Gira(Sol))
+
+Algún planeta gira alrededor de la Luna.
+Variable individual: Planeta
+Cuantificador existencial
+Ǝx(Planeta(X) -> Gira(Sol))
+
+Hay por lo menos un satélite.
+Variable individual: Satélite
+Cuantificador existencial
+
+Todos los perros del vecindario muerden a algún cartero.
+Variable individual: Perro
+Cuantificador universal
+Relación: Morder
+
+Hay un cartero al que lo muerden todos los perros.
+Variable individual: Cartero
+Cuantificador existencial
+Relación: Morder
+
+Todos los carteros son mordidos por algún perro
+Variable individual: Cartero
+Cuantificador universal
+Relación: Morder
+
+Hay un perro que muerde a todos los carteros
+Variable individual: Perro
+Cuantificador existencial
+Relación: Morder
+
+Todos los perros que asustan a algún cartero, lo muerden
+Variable individual: Perro
+Cuantificador universal
+Relación: Asustar, Morder
+
+Hay un perro que muerde a todos los perros que muerden a algún cartero
+Variable individual: Perro
+Cuantificador existencial
+Relación: Morder
+
+Hay un solo perro que se muerde a sí mismo
+Variable individual: Perro
+Cuantificador existencial
+Relación: Morder
+
+
+Swi Prolog
