@@ -262,7 +262,8 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 ```
 
 
-## variables individual, constantes individual, cuantificadores existencial universal, propiedades, relacion , dominio del discruso
+## Lógica de primer orden
+### variables individual, constantes individual, cuantificadores existencial universal, propiedades, relacion , dominio del discruso
 
 La Tierra es un planeta, 
 Constante individiual: Tierra
@@ -288,25 +289,31 @@ Todo planeta es un satélite.
 Variable individual: Planeta
 Cuantificador universal
 ∀xPlaneta(X) ^ Satelite(X)
+∀xP(X) ^ S(X)
 
 Todo planeta gira alrededor del Sol.
 Variable individual: Planeta
 Cuantificador universal
-∀x(Planeta(X) -> Gira(Sol))
+∀x(Planeta(X) -> Gira(sol))
+∀x(P(X) -> G(s))
 
 Algún planeta gira alrededor de la Luna.
 Variable individual: Planeta
 Cuantificador existencial
-Ǝx(Planeta(X) -> Gira(Sol))
+Ǝx(Planeta(X) -> Gira(luna))
+Ǝx(P(X) -> G(l))
 
 Hay por lo menos un satélite.
 Variable individual: Satélite
 Cuantificador existencial
+Ǝx Satelite(X)
+Ǝx S(X)
 
 Todos los perros del vecindario muerden a algún cartero.
 Variable individual: Perro
 Cuantificador universal
 Relación: Morder
+∀x P(X) -> Ǝ(y) ^ m(X,Y)
 
 Hay un cartero al que lo muerden todos los perros.
 Variable individual: Cartero
@@ -337,6 +344,3 @@ Hay un solo perro que se muerde a sí mismo
 Variable individual: Perro
 Cuantificador existencial
 Relación: Morder
-
-
-Swi Prolog
