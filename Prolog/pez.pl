@@ -16,3 +16,12 @@ fuma(DSF, bluemaster)
 mascota(sueco, perro)
 mascota(A, dunhill)
 mascota(FD, caballo)
+
+
+De nuestro árbol genealógico completo (padre, madre hijos, etc)
+Hechos, predicados, predicados monarios, binarios, 
+padre(luis)
+padrede(luis, maria)
+
+monario, hombre(), padre(), abuelo(), madre(), tio()
+para hacer consultas
