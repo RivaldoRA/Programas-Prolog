@@ -21,6 +21,7 @@ mujer(marisol).
 mujer(abril).
 mujer(rosamaria).
 mujer(josefina).
+mujer(teresa).
 
 padre(jorge).
 padre(agustin).
@@ -33,6 +34,11 @@ padre(odilon).
 
 padrede(jorge, agustin).
 padrede(jorge, jorgeluis).
+padrede(jorge, veronica).
+padrede(jorge, esmeraldasegunda).
+padrede(jorge, marisol).
+padrede(jorge, rosamaria).
+padrede(jorge, veronica).
 padrede(enrique, rigoberto).
 padrede(rigoberto, obey).
 padrede(rigoberto, claudel).
@@ -47,6 +53,7 @@ madre(esmeraldasegunda).
 madre(marisol).
 madre(rosamaria).
 madre(josefina).
+madre(teresa).
 
 madrede(esmeraldaprimera, veronica).
 madrede(esmeraldaprimera, esmeraldasegunda).
@@ -60,11 +67,21 @@ madrede(teresa, obey).
 madrede(teresa, claudel).
 madrede(teresa, brady).
 
-abuelo(X,Y) :- padrede(X, W), padrede(W, Y).
-abuela(X,Y) :- madrede(X,W), madrede(W, Y).
-nieto(X, Y) :- hombre(X), padrede(W, X), padrede(Y, W); hombre(X), madrede(W, X), madrede(Y, W).
-nieta(X, Y) :- mujer(X), padrede(W, X), padrede(Y, W); mujer(X), madrede(W, X), madrede(Y, W).
-hermano(X, Y) :- hombre(X), padrede(W, X), padrede(W, Y), madrede(Z, X), madrede(Z, Y).
-hermana(X, Y) :- mujer(X), padrede(W, X), padrede(W, Y), madrede(Z, X), madrede(Z, Y).
+abuelo(X,Y) :- padrede(X, W), (padrede(W, Y) ; madrede(W,Y)).
+abuela(X,Y) :- madrede(X,W), (padrede(W, Y) ; madrede(W,Y)).
+
+nieto(X, Y) :- hombre(X), (abuelo(Y,X) ; abuela(Y,X)).
+nieta(X, Y) :- mujer(X), (abuelo(Y,X) ; abuela(Y,X)).
+
+hermano(X, Y) :- X\=Y, hombre(X), padrede(W, X), padrede(W, Y), madrede(Z, X), madrede(Z, Y).
+hermana(X, Y) :- X\=Y, mujer(X), padrede(W, X), padrede(W, Y), madrede(Z, X), madrede(Z, Y).
+
 tio(X, Y) :- padrede(Z, Y), hermano(X, Z).
+tia(X, Y) :- madrede(Z, Y), hermana(X, Z).
+
+primo(X, Y) :- hombre(X), (padrede(Z,Y) ; madrede(Z,Y)), (tio(Z,X) ; tia(Z,X)).
+prima(X, Y) :- mujer(X), (padrede(Z,Y) ; madrede(Z,Y)), (tio(Z,X) ; tia(Z,X)).
+
+
+
 prov(X) :- hombre(X), padre(X); madre(X), mujer(X).
