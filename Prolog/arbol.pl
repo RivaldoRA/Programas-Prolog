@@ -82,6 +82,4 @@ tia(X, Y) :- madrede(Z, Y), hermana(X, Z).
 primo(X, Y) :- hombre(X), (padrede(Z,Y) ; madrede(Z,Y)), (tio(Z,X) ; tia(Z,X)).
 prima(X, Y) :- mujer(X), (padrede(Z,Y) ; madrede(Z,Y)), (tio(Z,X) ; tia(Z,X)).
 
-
-
 prov(X) :- hombre(X), padre(X); madre(X), mujer(X).
