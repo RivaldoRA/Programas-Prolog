@@ -1,3 +1,4 @@
+% Problema 1 - Guardianes de los templos
 guardianes(apolo).
 guardianes(hecate).
 guardianes(ares).
@@ -20,3 +21,14 @@ cuida(X, Y) :-
     guardianes(X),
     templos(Y),
     \+ nocuida(X, Y).
+
+% Problema 2 - Armas de los héroes
+heroe(aquiles).
+heroe(perseo).
+heroe(hercules).
+heroe(teseo).
+
+arma(espada).
+arma(lazn).
+arma().
+arma().
