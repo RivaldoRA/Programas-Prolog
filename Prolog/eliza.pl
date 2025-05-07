@@ -4,6 +4,7 @@ eliza:-	writeln('Hola , mi nombre es  Eliza tu  chatbot,
 	usar solo minúsculas sin . al final:'),
 	readln(Input),
 	eliza(Input),!.
+
 eliza(Input):- Input == ['Adios'],
 	writeln('Adios. espero poder verte ayudado.'), !.
 eliza(Input):- Input == ['Adios', '.'],
@@ -35,6 +36,26 @@ eliza(Input) :-
 	readln(Input1),
 	eliza(Input1), !.
 
+template([hola, s(_), mi, nombre, es, s(_), '.'], ['Hola', 1, 'Como', estas, tu, '?', yo, soy, 0], [1,5]).
+template([buendia, s(_), mi, nombre, es, s(_), '.'], ['Buendia', 1, 'Como', estas, tu, '?', yo, soy, 0], [1,5]).
+template([como, estas, s(_), mi, nombre, es, s(_), '.'], ['Hola', 1, 'Como', estas, tu, '?', yo, soy, 0], [2,6]).
+
+template([hola, s(_), yo, soy, s(_), '.'], [hola, 1, mi, nombre, es, 0], [1,4]).
+template([buendia, s(_), yo, soy, s(_), '.'], [buendia, 1, mi, nombre, es, 0], [1,4]).
+template([como, estas, s(_), yo, soy, s(_), '.'], [como, estas, 1, mi, nombre, es, 0], [2,5]).
+
+template([hi, s(_), i, am, s(_), '.'], ['Hi', 1, i, am, 0], [1,4]).
+template([goodmorning, s(_), i, am, s(_), '.'], ['Goodmorning', 1, i, am, 0], [1,4]).
+template([how, are, you, s(_), i, am, s(_), '.'], ['Hey', 1, i, am, 0], [3,6]).
+
+template([hola, necesito, de, tu, ayuda, '.'], ['En', que, puedo, ayudarte],[]).
+template([buendia, necesito, de, tu, ayuda, '.'], ['En', que, puedo, ayudarte],[]).
+template([como, estas, necesito, de, tu, ayuda, '.'], ['En', que, puedo, ayudarte],[]).
+
+template([hola, eres, s(_), '?'],['Si!', soy, 0],[2]).
+template([buendia, eres, s(_), '?'],['Si!', soy, 0],[2]).
+template([como, estas, eres, s(_), '?'],['Si!', soy, 0],[3]).
+
 template([hola, mi, nombre, es, s(_), '.'], ['Hola', 0, 'Como', estas, tu, '?'], [4]).
 template([buendia, mi, nombre, es, s(_), '.'], ['buen dia', 'Como', estas, tu, 0, '?'], [4]).
 
@@ -43,6 +64,7 @@ template([buendia, ',', mi, nombre, es, s(_), '.'], ['Buendia', 'Como', estas, t
 
 template([hola, _], ['Hola', 'como', estas, tu, '?'], []).
 template([buendia, _], ['Buendia', 'Como', estas, tu, '?'], []).
+
 
 template([yo, s(_), yo, soy, s(_),'.'], [por, que, 0, eres, 1, '?'], [1, 4]).
 template([yo, s(_), tu, '.'], [why, do, you, 0, me ,'?'], [1]).
