@@ -1,4 +1,53 @@
 
+% Temas proyecto
+% Rubeola
+% VPH
+% Investigar enfermedades
+% Hechos monarios, binarios: sintoma, enfermedad, region, ver datos que agregar
+
+% Enfermedades
+enfermedad(rubeola).
+enfermedad(vph).
+
+% Síntomas asociados
+sintoma(rubeola, fiebre).
+sintoma(rubeola, sarpullido).
+sintoma(rubeola, inflamacion_ganglios).
+sintoma(vph, verrugas_genitales).
+sintoma(vph, picazon).
+
+% Regiones del cuerpo afectadas
+region_afectada(rubeola, piel).
+region_afectada(rubeola, ganglios).
+region_afectada(vph, genitales).
+region_afectada(vph, cuello_uterino).
+
+% Regiones geográficas donde son prevalentes
+prevalente_en(rubeola, america_latina).
+prevalente_en(vph, todo_el_mundo).
+
+% Transmisión
+transmision(rubeola, contacto_directo).
+transmision(rubeola, via_respiratoria).
+transmision(vph, contacto_sexual).
+
+% Prevención
+prevencion(rubeola, vacuna_triple_viral).
+prevencion(vph, vacuna_vph).
+
+% Diagnóstico
+diagnostico(rubeola, examen_sangre).
+diagnostico(vph, papanicolaou).
+
+% Gravedad
+gravedad(rubeola, moderada).
+gravedad(vph, variable).
+
+% Tipo de enfermedad
+tipo_enfermedad(rubeola, viral).
+tipo_enfermedad(vph, viral).
+
+
 eliza:-	writeln('Hola , mi nombre es  Eliza tu  chatbot,
 	por favor ingresa tu consulta,
 	usar solo minúsculas sin . al final:'),
