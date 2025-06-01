@@ -5,49 +5,6 @@
 % Investigar enfermedades
 % Hechos monarios, binarios: sintoma, enfermedad, region, ver datos que agregar
 
-% Enfermedades
-enfermedad(rubeola).
-enfermedad(vph).
-
-% Síntomas asociados
-sintoma(rubeola, fiebre).
-sintoma(rubeola, sarpullido).
-sintoma(rubeola, inflamacion_ganglios).
-sintoma(vph, verrugas_genitales).
-sintoma(vph, picazon).
-
-% Regiones del cuerpo afectadas
-region_afectada(rubeola, piel).
-region_afectada(rubeola, ganglios).
-region_afectada(vph, genitales).
-region_afectada(vph, cuello_uterino).
-
-% Regiones geográficas donde son prevalentes
-prevalente_en(rubeola, america_latina).
-prevalente_en(vph, todo_el_mundo).
-
-% Transmisión
-transmision(rubeola, contacto_directo).
-transmision(rubeola, via_respiratoria).
-transmision(vph, contacto_sexual).
-
-% Prevención
-prevencion(rubeola, vacuna_triple_viral).
-prevencion(vph, vacuna_vph).
-
-% Diagnóstico
-diagnostico(rubeola, examen_sangre).
-diagnostico(vph, papanicolaou).
-
-% Gravedad
-gravedad(rubeola, moderada).
-gravedad(vph, variable).
-
-% Tipo de enfermedad
-tipo_enfermedad(rubeola, viral).
-tipo_enfermedad(vph, viral).
-
-
 eliza:-	writeln('Hola , mi nombre es  Eliza tu  chatbot,
 	por favor ingresa tu consulta,
 	usar solo minúsculas sin . al final:'),
@@ -67,6 +24,11 @@ eliza(Input):- Input == ['Hasta', 'luego', '.'],
 eliza(Input):- Input == ['Nos', 'vemos', 'pronto'],
 	writeln('Adios. nos vemos pronto'), !.
 eliza(Input):- Input == ['Nos', 'vemos', 'pronto', '.'],
+	writeln('Adios. nos vemos pronto'), !.
+
+eliza(Input):- Input == [bye],
+	writeln('Adios. nos vemos pronto'), !.
+eliza(Input):- Input == ['~'],
 	writeln('Adios. nos vemos pronto'), !.
 
 eliza(Input):- Input == [''],
@@ -114,7 +76,6 @@ template([buendia, ',', mi, nombre, es, s(_), '.'], ['Buendia', 'Como', estas, t
 template([hola, _], ['Hola', 'como', estas, tu, '?'], []).
 template([buendia, _], ['Buendia', 'Como', estas, tu, '?'], []).
 
-
 template([yo, s(_), yo, soy, s(_),'.'], [por, que, 0, eres, 1, '?'], [1, 4]).
 template([yo, s(_), tu, '.'], [why, do, you, 0, me ,'?'], [1]).
 template([yo, soy, s(_),'.'], [porque, eres, tu, 0, '?'], [2]).
@@ -123,11 +84,19 @@ template([yo, soy, s(_),'.'], [porque, eres, tu, 0, '?'], [2]).
 template([te, gustan, las, s(_), _], [flagLike], [3]).
 template([te, gustan, los, s(_), _], [flagLike], [3]).
 
-		 % pregunta algo que hace eliza
+% pregunta algo que hace eliza
 template([tu, eres, s(_), _], [flagDo], [2]).
 % pregunta algo que es eliza
 template([que, eres, tu, s(_)], [flagIs], [2]).
 template([eres, s(_), '?'], [flagIs], [2]).
+
+% Preguntar por las enfermedades
+template([conoces, la, enfermedad, s(_), _], [flagEnfermedad], [3]).
+template([conoces, la, enfermedad, s(_)], [flagEnfermedad], [3]).
+template([cuales, son, los, sintomas, de, s(_), _], [flagSintoma], [5]).
+template([cuales, son, los, sintomas, de, s(_)], [flagSintoma], [5]).
+template([tengo , s(_)], [flagDiagnostico], [1]).
+template([tengo , s(_), _], [flagDiagnostico], [1]).
 
 template([como, estas, tu, '?'], [yo, estoy, bien, ',', gracias, por, preguntar, '.'], []).
 
@@ -150,8 +119,6 @@ likes(manzanas).
 likes(computadoras).
 like(carros).
 
-
-
 % lo que hace eliza: flagDo
 elizaDoes(X, R):- does(X), R = ['Yes', i, X, and, i, love, it].
 elizaDoes(X, R):- \+does(X), R = ['No', i, do, not, X ,'.', it, is, too, hard, for, me].
@@ -168,6 +135,64 @@ is0(nice).
 is0(fine).
 is0(happy).
 is0(redundant).
+
+% Eliza: Enfermedades
+elizaEnfermedad(X, R):- enfermedad(X), R = ['Conozco', la, enfermedad, X].
+elizaEnfermedad(X, R):- \+enfermedad(X), R = ['No', conozco, la, enfermedad, X].
+enfermedad(rubeola).
+enfermedad(vph).
+
+sintoma(rubeola, fiebre).
+sintoma(rubeola, sarpullido).
+sintoma(rubeola, inflamacion_ganglios).
+sintoma(vph, verrugas_genitales).
+sintoma(vph, picazon).
+
+% Eliza: Mostrar todos los sintomas de una enfermedad
+elizaSintoma(X, R):- 
+	sintoma(X, _),
+	findall(Sintoma, sintoma(X, Sintoma), ListaSintomas),
+	atomic_list_concat(ListaSintomas, ',', SintomasString),
+	R = ['La', X, tiene, de, sintomas, SintomasString].
+
+elizaSintoma(X, R):-
+	\+sintoma(X, _), R = ['No', tengo, informacion, de, los, sintomas, de, la, X].
+
+% Eliza: Diagnosticar una enfermedad a partir de un sintoma
+elizaDiagnostico(X ,R):- sintoma(Y, X), R = ['Puedes', tener, Y].
+elizaDiagnostico(X ,R):- \+sintoma(_, X), R = ['No', se, que, puedas, tener].
+
+% Regiones del cuerpo afectadas
+region_afectada(rubeola, piel).
+region_afectada(rubeola, ganglios).
+region_afectada(vph, genitales).
+region_afectada(vph, cuello_uterino).
+
+% Regiones geográficas donde son prevalentes
+prevalente_en(rubeola, america_latina).
+prevalente_en(vph, todo_el_mundo).
+
+% Transmisión
+transmision(rubeola, contacto_directo).
+transmision(rubeola, via_respiratoria).
+transmision(vph, contacto_sexual).
+
+% Prevención
+prevencion(rubeola, vacuna_triple_viral).
+prevencion(vph, vacuna_vph).
+
+% Diagnóstico
+diagnostico(rubeola, examen_sangre).
+diagnostico(vph, papanicolaou).
+
+% Gravedad
+gravedad(rubeola, moderada).
+gravedad(vph, variable).
+
+% Tipo de enfermedad
+tipo_enfermedad(rubeola, viral).
+tipo_enfermedad(vph, viral).
+
 
 match([],[]).
 match([], _):- true.
@@ -204,6 +229,26 @@ replace0([I|_], Input, _, Resp, R):-
 	nth0(0, Resp, X),
 	X == flagIs,
 	elizaIs(Atom, R).
+
+% Eliza enfermedad:
+replace0([I|_], Input, _, Resp, R):-
+	nth0(I, Input, Atom),
+	nth0(0, Resp, X),
+	X == flagEnfermedad,
+	elizaEnfermedad(Atom, R).
+
+% Eliza sintoma:
+replace0([I|_], Input, _, Resp, R):-
+	nth0(I, Input, Atom),
+	nth0(0, Resp, X),
+	X == flagSintoma,
+	elizaSintoma(Atom, R).
+
+replace0([I|_], Input, _, Resp, R):-
+	nth0(I, Input, Atom),
+	nth0(0, Resp, X),
+	X == flagDiagnostico,
+	elizaDiagnostico(Atom, R).
 
 replace0([I|Index], Input, N, Resp, R):-
 	length(Index, M), M =:= 0,
