@@ -90,13 +90,32 @@ template([tu, eres, s(_), _], [flagDo], [2]).
 template([que, eres, tu, s(_)], [flagIs], [2]).
 template([eres, s(_), '?'], [flagIs], [2]).
 
-% Preguntar por las enfermedades
+% Enfermedades
+
+% Preguntar si existe en el sistema experto
 template([conoces, la, enfermedad, s(_), _], [flagEnfermedad], [3]).
 template([conoces, la, enfermedad, s(_)], [flagEnfermedad], [3]).
+
+% Preguntar por los síntomas de una enfermedad
 template([cuales, son, los, sintomas, de, s(_), _], [flagSintoma], [5]).
 template([cuales, son, los, sintomas, de, s(_)], [flagSintoma], [5]).
+
+% Diagnosticar la enfermedad a través de un síntoma y una región
+template([tengo , s(_), en, s(_)], [flagDiagnosticoRegion], [1,3]).
+template([tengo , s(_), en, s(_), _], [flagDiagnosticoRegion], [1,3]).
+
+% Diagnosticar la enfermedad a través de dos sintomas
+template([tengo , s(_), y, s(_)], [flagDiagnosticoDoble], [1,3]).
+template([tengo , s(_), y, s(_), _], [flagDiagnosticoDoble], [1,3]).
+
+% Diagnosticar la enfermedad a través de un síntoma
 template([tengo , s(_)], [flagDiagnostico], [1]).
-template([tengo , s(_), _], [flagDiagnostico], [1]).
+
+% Preguntar por la region de una enfermedad
+template([donde, afecta, s(_), _], [flagRegionAfectada], [2]).
+template([que, region, afecta, s(_), _], [flagRegionAfectada], [3]).
+template([donde, afecta, s(_)], [flagRegionAfectada], [2]).
+template([que, region, afecta, s(_)], [flagRegionAfectada], [3]).
 
 template([como, estas, tu, '?'], [yo, estoy, bien, ',', gracias, por, preguntar, '.'], []).
 
@@ -142,12 +161,6 @@ elizaEnfermedad(X, R):- \+enfermedad(X), R = ['No', conozco, la, enfermedad, X].
 enfermedad(rubeola).
 enfermedad(vph).
 
-sintoma(rubeola, fiebre).
-sintoma(rubeola, sarpullido).
-sintoma(rubeola, inflamacion_ganglios).
-sintoma(vph, verrugas_genitales).
-sintoma(vph, picazon).
-
 % Eliza: Mostrar todos los sintomas de una enfermedad
 elizaSintoma(X, R):- 
 	sintoma(X, _),
@@ -158,15 +171,49 @@ elizaSintoma(X, R):-
 elizaSintoma(X, R):-
 	\+sintoma(X, _), R = ['No', tengo, informacion, de, los, sintomas, de, la, X].
 
-% Eliza: Diagnosticar una enfermedad a partir de un sintoma
-elizaDiagnostico(X ,R):- sintoma(Y, X), R = ['Puedes', tener, Y].
+% Eliza: Diagnosticar una enfermedad a partir de un sintoma en una región del cuerpo
+elizaDiagnosticoRegion(X, Y, R) :-
+	sintoma(Z, X),
+	region_afectada(Z, Y),
+    R = ['Si', tienes, X, en, Y, tienes, Z].
+
+% Eliza: Diagnosticar una enfermedad a partir de dos sintomas
+elizaDiagnosticoDoble(X, Y, R) :-
+	sintoma(Z, X),
+	sintoma(Z, Y),
+    R = ['Si', tienes, X, y, Y, puedas, tener, Z].
+
+% Eliza: Diagnosticar una enfermedad a partir de un sintoma que tenga una región definida
+elizaDiagnostico(X ,R):- sintoma_region(X,Z), region_afectada(Y,Z), R = ['Puedes', tener, Y, si, tienes, X, en, Z].
+
+% Eliza: Diagnosticar una enfermedad a partir de un sintoma que no tenga una región definida
+elizaDiagnostico(X ,R):- sintoma(Z,X), R = ['Es', poco, probable, que, tengas, Z].
 elizaDiagnostico(X ,R):- \+sintoma(_, X), R = ['No', se, que, puedas, tener].
 
-% Regiones del cuerpo afectadas
+sintoma(rubeola, fiebre).
+sintoma(rubeola, sarpullido).
+sintoma(rubeola, inflamacion).
+sintoma(vph, verrugas).
+sintoma(vph, picazon).
+
+% Eliza: Regiones del cuerpo afectadas
+elizaRegionAfectada(X, R) :-
+    region_afectada(X, _),
+    findall(Region, region_afectada(X, Region), ListaRegiones),
+	atomic_list_concat(ListaRegiones, ',', RegionesString),
+    R = ['La', X, 'afecta', 'las', 'siguientes', 'regiones', RegionesString].
+
+elizaRegionAfectada(X , R) :- \+region_afectada(X, _), R = ['No', tengo, 'informacion', 'sobre', 'las', 'regiones', 'afectadas'].
+
 region_afectada(rubeola, piel).
 region_afectada(rubeola, ganglios).
 region_afectada(vph, genitales).
-region_afectada(vph, cuello_uterino).
+
+sintoma_region(sarpullido, piel).
+sintoma_region(inflamacion, ganglios).
+sintoma_region(verrugas, genitales).
+sintoma_region(picazon, genitales).
+
 
 % Regiones geográficas donde son prevalentes
 prevalente_en(rubeola, america_latina).
@@ -244,11 +291,35 @@ replace0([I|_], Input, _, Resp, R):-
 	X == flagSintoma,
 	elizaSintoma(Atom, R).
 
+% Eliza diagnostico:
 replace0([I|_], Input, _, Resp, R):-
 	nth0(I, Input, Atom),
 	nth0(0, Resp, X),
 	X == flagDiagnostico,
 	elizaDiagnostico(Atom, R).
+
+% Eliza region_afectada:
+replace0([I|_], Input, _, Resp, R):-
+    nth0(I, Input, Atom),
+    nth0(0, Resp, X),
+    X == flagRegionAfectada,
+    elizaRegionAfectada(Atom, R).
+
+% Eliza diagnostico region y sintoma:
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagDiagnosticoRegion,
+	elizaDiagnosticoRegion(Atom1, Atom2, R).
+
+% Eliza diagnostico doble:
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagDiagnosticoDoble,
+	elizaDiagnosticoDoble(Atom1, Atom2, R).
 
 replace0([I|Index], Input, N, Resp, R):-
 	length(Index, M), M =:= 0,
