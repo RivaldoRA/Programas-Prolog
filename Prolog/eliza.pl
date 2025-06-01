@@ -111,11 +111,27 @@ template([tengo , s(_), y, s(_), _], [flagDiagnosticoDoble], [1,3]).
 % Diagnosticar la enfermedad a través de un síntoma
 template([tengo , s(_)], [flagDiagnostico], [1]).
 
-% Preguntar por la region de una enfermedad
-template([donde, afecta, s(_), _], [flagRegionAfectada], [2]).
-template([que, region, afecta, s(_), _], [flagRegionAfectada], [3]).
-template([donde, afecta, s(_)], [flagRegionAfectada], [2]).
-template([que, region, afecta, s(_)], [flagRegionAfectada], [3]).
+% Preguntar por la region del cuerpo de una enfermedad
+template([donde, afecta, la, s(_), _], [flagRegionAfectada], [3]).
+template([donde, afecta, el, s(_), _], [flagRegionAfectada], [3]).
+template([que, region, afecta, la, s(_), _], [flagRegionAfectada], [4]).
+template([que, region, afecta, el, s(_), _], [flagRegionAfectada], [4]).
+template([donde, afecta, la, s(_)], [flagRegionAfectada], [3]).
+template([donde, afecta, el, s(_)], [flagRegionAfectada], [3]).
+template([que, region, afecta, la, s(_)], [flagRegionAfectada], [4]).
+template([que, region, afecta, el, s(_)], [flagRegionAfectada], [4]).
+
+% Preguntar en que lugar del mundo prevalece
+template([en ,que, parte, del, mundo, se, encuentra, la, s(_)], [flagArea], [8]).
+template([en ,que, parte, del, mundo, se, encuentra, el, s(_)], [flagArea], [8]).
+
+% Preguntar como se transmite
+template([como, se, transmite, la, s(_)], [flagTransmision], [4]).
+template([como, se, transmite, el, s(_)], [flagTransmision], [4]).
+
+% Preguntar como se previene
+template([como, se, previene, la, s(_)], [flagPrevencion], [4]).
+template([como, se, previene, el, s(_)], [flagPrevencion], [4]).
 
 template([como, estas, tu, '?'], [yo, estoy, bien, ',', gracias, por, preguntar, '.'], []).
 
@@ -201,9 +217,9 @@ elizaRegionAfectada(X, R) :-
     region_afectada(X, _),
     findall(Region, region_afectada(X, Region), ListaRegiones),
 	atomic_list_concat(ListaRegiones, ',', RegionesString),
-    R = ['La', X, 'afecta', 'las', 'siguientes', 'regiones', RegionesString].
+    R = ['La', X, afecta, las, siguientes, regiones, RegionesString].
 
-elizaRegionAfectada(X , R) :- \+region_afectada(X, _), R = ['No', tengo, 'informacion', 'sobre', 'las', 'regiones', 'afectadas'].
+elizaRegionAfectada(X , R) :- \+region_afectada(X, _), R = ['No', tengo, informacion, sobre, las, regiones, afectadas].
 
 region_afectada(rubeola, piel).
 region_afectada(rubeola, ganglios).
@@ -214,17 +230,36 @@ sintoma_region(inflamacion, ganglios).
 sintoma_region(verrugas, genitales).
 sintoma_region(picazon, genitales).
 
+elizaArea(X ,R) :-
+	prevalente_en(X, Y),
+    R = ['La', X, se, encuentra, principalmente, en, Y].
+
+elizaArea(X ,R) :- \+prevalente_en(X, _), R = ['No', tengo, conocimientos, de, donde, se, encuentra, X].
 
 % Regiones geográficas donde son prevalentes
 prevalente_en(rubeola, america_latina).
 prevalente_en(vph, todo_el_mundo).
 
 % Transmisión
+elizaTransmision(X, R):-
+    transmision(X, _),
+    findall(Transmision, transmision(X, Transmision), ListaTransmisiones),
+	atomic_list_concat(ListaTransmisiones, ',', TransmisionesString),
+    R = ['La', X, se, transmite, de, las, siguientes, formas, TransmisionesString].
+
+elizaTransmision(X ,R) :- \+transmision(X, _), R = ['No', tengo, conocimientos, de, como, se, transmite, X].
+
 transmision(rubeola, contacto_directo).
 transmision(rubeola, via_respiratoria).
 transmision(vph, contacto_sexual).
 
 % Prevención
+elizaPrevencion(X, R):-
+    prevencion(X, Y),
+    R = ['La', X, se, puede, prevenir, de, la, siguiente, forma, Y].
+
+elizaPrevencion(X ,R) :- \+prevencion(X, _), R = ['No', tengo, conocimientos, de, como, se, previene, X].
+
 prevencion(rubeola, vacuna_triple_viral).
 prevencion(vph, vacuna_vph).
 
@@ -298,7 +333,7 @@ replace0([I|_], Input, _, Resp, R):-
 	X == flagDiagnostico,
 	elizaDiagnostico(Atom, R).
 
-% Eliza region_afectada:
+% Eliza region del cuerpo afectada:
 replace0([I|_], Input, _, Resp, R):-
     nth0(I, Input, Atom),
     nth0(0, Resp, X),
@@ -320,6 +355,27 @@ replace0([I1, I2|_], Input, _, Resp, R):-
 	nth0(0, Resp, X),
 	X == flagDiagnosticoDoble,
 	elizaDiagnosticoDoble(Atom1, Atom2, R).
+
+% Eliza lugar del mundo donde prevalece:
+replace0([I|_], Input, _, Resp, R):-
+    nth0(I, Input, Atom),
+    nth0(0, Resp, X),
+    X == flagArea,
+    elizaArea(Atom, R).
+
+% Eliza como se transmite:
+replace0([I|_], Input, _, Resp, R):-
+    nth0(I, Input, Atom),
+    nth0(0, Resp, X),
+    X == flagTransmision,
+    elizaTransmision(Atom, R).
+
+% Eliza como se previene:
+replace0([I|_], Input, _, Resp, R):-
+    nth0(I, Input, Atom),
+    nth0(0, Resp, X),
+    X == flagPrevencion,
+    elizaPrevencion(Atom, R).
 
 replace0([I|Index], Input, N, Resp, R):-
 	length(Index, M), M =:= 0,
