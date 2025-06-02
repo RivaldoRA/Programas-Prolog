@@ -5,6 +5,8 @@
 % Investigar enfermedades
 % Hechos monarios, binarios: sintoma, enfermedad, region, ver datos que agregar
 
+:- include("arbol.pl").
+
 eliza:-	writeln('Hola , mi nombre es  Eliza tu  chatbot,
 	por favor ingresa tu consulta,
 	usar solo minúsculas sin . al final:'),
@@ -132,6 +134,79 @@ template([como, se, transmite, el, s(_)], [flagTransmision], [4]).
 % Preguntar como se previene
 template([como, se, previene, la, s(_)], [flagPrevencion], [4]).
 template([como, se, previene, el, s(_)], [flagPrevencion], [4]).
+
+% Árbol genealógico
+
+% Preguntar si es padre de
+template([s(_), es, padre, de, s(_)], [flagPadreDe], [0,4]).
+template([es, s(_), el, padre, de, s(_), '?'], [flagPadreDe], [1, 5]).
+template([s(_), es, padre, de, s(_), _], [flagPadreDe], [1, 4]).
+
+% Preguntar si es madre de
+template([s(_), es, madre, de, s(_)], [flagMadreDe], [0,4]).
+template([es, s(_), la, madre, de, s(_), '?'], [flagMadreDe], [1, 5]).
+template([s(_), es, madre, de, s(_), _], [flagMadreDe], [1, 4]).
+
+% Preguntar si es hijo de
+template([s(_), es, hijo, de, s(_)], [flagHijoDe], [0,4]).
+template([es, s(_), el, hijo, de, s(_), '?'], [flagHijoDe], [1, 5]).
+template([s(_), es, hijo, de, s(_), _], [flagHijoDe], [1, 4]).
+
+% Preguntar si es hija de
+template([s(_), es, hija, de, s(_)], [flagHijaDe], [0,4]).
+template([es, s(_), la, hija, de, s(_), '?'], [flagHijaDe], [1, 5]).
+template([s(_), es, hija, de, s(_), _], [flagHijaDe], [1, 4]).
+
+% Preguntar si es abuelo de
+template([s(_), es, abuelo, de, s(_)], [flagAbueloDe], [0,4]).
+template([es, s(_), el, abuelo, de, s(_), '?'], [flagAbueloDe], [1, 5]).
+template([s(_), es, abuelo, de, s(_), _], [flagAbueloDe], [1, 4]).
+
+% Preguntar si es abuela de
+template([s(_), es, abuela, de, s(_)], [flagAbuelaDe], [0,4]).
+template([es, s(_), la, abuela, de, s(_), '?'], [flagAbuelaDe], [1, 5]).
+template([s(_), es, abuela, de, s(_), _], [flagAbuelaDe], [1, 4]).
+
+% Preguntar si es hermano de
+template([s(_), es, hermano, de, s(_)], [flagHermanoDe], [0,4]).
+template([es, s(_), el, hermano, de, s(_), '?'], [flagHermanoDe], [1, 5]).
+template([s(_), es, hermano, de, s(_), _], [flagHermanoDe], [1, 4]).
+
+% Preguntar si es hermana de
+template([s(_), es, hermana, de, s(_)], [flagHermanaDe], [0,4]).
+template([es, s(_), la, hermana, de, s(_), '?'], [flagHermanaDe], [1, 5]).
+template([s(_), es, hermana, de, s(_), _], [flagHermanaDe], [1, 4]).
+
+% Preguntar si es tio de
+template([s(_), es, tio, de, s(_)], [flagTioDe], [0,4]).
+template([es, s(_), el, tio, de, s(_), '?'], [flagTioDe], [1, 5]).
+template([s(_), es, tio, de, s(_), _], [flagTioDe], [0,4]).
+
+% Preguntar si es tia de
+template([s(_), es, tia, de, s(_)], [flagTiaDe], [0,4]).
+template([es, s(_), la, tia, de, s(_), '?'], [flagTiaDe], [1, 5]).
+template([s(_), es, tia, de, s(_), _], [flagTiaDe], [0,4]).
+
+% Preguntar si es primo de
+template([s(_), es, primo, de, s(_)], [flagPrimoDe], [0,4]).
+template([es, s(_), el, primo, de, s(_), '?'], [flagPrimoDe], [1, 5]).
+template([s(_), es, primo, de, s(_), _], [flagPrimoDe], [0,4]).
+
+% Preguntar si es prima de
+template([s(_), es, prima, de, s(_)], [flagPrimaDe], [0,4]).
+template([es, s(_), la, prima, de, s(_), '?'], [flagPrimaDe], [1, 5]).
+template([s(_), es, prima, de, s(_), _], [flagPrimaDe], [0,4]).
+
+% Preguntar si es sobrino de
+template([s(_), es, sobrino, de, s(_)], [flagSobrinoDe], [0,4]).
+template([es, s(_), el, sobrino, de, s(_), '?'], [flagSobrinoDe], [1, 5]).
+template([s(_), es, sobrino, de, s(_), _], [flagSobrinoDe], [0,4]).
+
+% Preguntar si es sobrina de
+template([s(_), es, sobrina, de, s(_)], [flagSobrinaDe], [0,4]).
+template([es, s(_), la, sobrina, de, s(_), '?'], [flagSobrinaDe], [1, 5]).
+template([s(_), es, sobrina, de, s(_), _], [flagSobrinaDe], [0,4]).
+
 
 template([como, estas, tu, '?'], [yo, estoy, bien, ',', gracias, por, preguntar, '.'], []).
 
@@ -275,6 +350,100 @@ gravedad(vph, variable).
 tipo_enfermedad(rubeola, viral).
 tipo_enfermedad(vph, viral).
 
+% Árbol genealógico
+
+% Padre de
+elizaPadreDe(X, Y, R) :-
+	padrede(X , Y),
+	R = [X, es, padre, de, Y].
+
+elizaPadreDe(X, Y, R) :- \+padrede(X , Y), R = [X, no, es, padre, de, Y].
+
+% Madre de
+elizaMadreDe(X, Y, R) :-
+	madrede(X , Y),
+	R = [X, es, madre, de, Y].
+
+elizaMadreDe(X, Y, R) :- \+madrede(X , Y), R = [X, no, es, madre, de, Y].
+
+% Hijo de
+elizaHijoDe(X, Y, R) :-
+	hijode(X , Y),
+	R = [X, es, hijo, de, Y].
+
+elizaHijoDe(X, Y, R) :- \+hijode(X , Y), R = [X, no, es, hijo, de, Y].
+
+% Hija de
+elizaHijaDe(X, Y, R) :-
+	hijade(X , Y),
+	R = [X, es, hija, de, Y].
+
+elizaHijaDe(X, Y, R) :- \+hijade(X , Y), R = [X, no, es, hija, de, Y].
+
+% Abuelo de
+elizaAbueloDe(X, Y, R) :-
+	abuelode(X, Y),
+	R = [X, es, abuelo, de, Y].
+
+elizaAbueloDe(X, Y, R) :- \+abuelode(X , Y), R = [X, no, es, abuelo, de, Y].
+
+% Abuela de
+elizaAbuelaDe(X, Y, R) :-
+	abuelade(X, Y),
+	R = [X, es, abuela, de, Y].
+
+elizaAbuelaDe(X, Y, R) :- \+abuelade(X , Y), R = [X, no, es, abuela, de, Y].
+
+% Hermano de
+elizaHermanoDe(X, Y, R) :-
+	hermanode(X, Y),
+	R = [X, es, hermano, de, Y].
+
+elizaHermanoDe(X, Y, R) :- \+hermanode(X , Y), R = [X, no, es, hermano, de, Y].
+
+% Hermanda de
+elizaHermanaDe(X, Y, R) :-
+	hermanade(X, Y),
+	R = [X, es, hermana, de, Y].
+
+elizaHermanaDe(X, Y, R) :- \+hermanade(X , Y), R = [X, no, es, hermana, de, Y].
+
+% Eliza: Tío de
+elizaTioDe(X, Y, R) :-
+    tiode(X, Y),
+    R = [X, es, tio, de, Y].
+elizaTioDe(X, Y, R) :- \+tiode(X , Y), R = [X, no, es, tio, de, Y].
+
+% Eliza: Tía de
+elizaTiaDe(X, Y, R) :-
+    tiade(X, Y),
+    R = [X, es, tia, de, Y].
+elizaTiaDe(X, Y, R) :- \+tiade(X , Y), R = [X, no, es, tia, de, Y].
+
+% Eliza: Primo de
+elizaPrimoDe(X, Y, R) :-
+    primode(X, Y),
+    R = [X, es, primo, de, Y].
+elizaPrimoDe(X, Y, R) :- \+primode(X , Y), R = [X, no, es, primo, de, Y].
+
+% Eliza: Prima de
+elizaPrimaDe(X, Y, R) :-
+    primade(X, Y),
+    R = [X, es, prima, de, Y].
+elizaPrimaDe(X, Y, R) :- \+primade(X , Y), R = [X, no, es, prima, de, Y].
+
+% Eliza: Sobrino de
+elizaSobrinoDe(X, Y, R) :-
+    sobrinode(X, Y),
+    R = [X, es, sobrino, de, Y].
+elizaSobrinoDe(X, Y, R) :- \+sobrinode(X , Y), R = [X, no, es, sobrino, de, Y].
+
+% Eliza: Sobrina de
+elizaSobrinaDe(X, Y, R) :-
+    sobrinade(X, Y),
+    R = [X, es, sobrina, de, Y].
+elizaSobrinaDe(X, Y, R) :- \+sobrinade(X , Y), R = [X, no, es, sobrina, de, Y].
+
 
 match([],[]).
 match([], _):- true.
@@ -376,6 +545,121 @@ replace0([I|_], Input, _, Resp, R):-
     nth0(0, Resp, X),
     X == flagPrevencion,
     elizaPrevencion(Atom, R).
+
+% Árbol genealógico
+
+% Padre de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagPadreDe,
+	elizaPadreDe(Atom1, Atom2, R).
+
+% Madre de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagMadreDe,
+	elizaMadreDe(Atom1, Atom2, R).
+
+% Abuelo de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagAbueloDe,
+	elizaAbueloDe(Atom1, Atom2, R).
+
+% Abuela de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagAbuelaDe,
+	elizaAbuelaDe(Atom1, Atom2, R).
+
+% Hermano de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagHermanoDe,
+	elizaHermanoDe(Atom1, Atom2, R).
+
+% Hermana de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagHermanaDe,
+	elizaHermanaDe(Atom1, Atom2, R).
+
+% Hijo de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagHijoDe,
+	elizaHijoDe(Atom1, Atom2, R).
+
+% Hija de 
+replace0([I1, I2|_], Input, _, Resp, R):-
+	nth0(I1, Input, Atom1),
+	nth0(I2, Input, Atom2),
+	nth0(0, Resp, X),
+	X == flagHijaDe,
+	elizaHijaDe(Atom1, Atom2, R).
+
+% Eliza: Tío de
+replace0([I1, I2|_], Input, _, Resp, R):-
+    nth0(I1, Input, Atom1),
+    nth0(I2, Input, Atom2),
+    nth0(0, Resp, X),
+    X == flagTioDe,
+    elizaTioDe(Atom1, Atom2, R).
+
+% Eliza: Tía de
+replace0([I1, I2|_], Input, _, Resp, R):-
+    nth0(I1, Input, Atom1),
+    nth0(I2, Input, Atom2),
+    nth0(0, Resp, X),
+    X == flagTiaDe,
+    elizaTiaDe(Atom1, Atom2, R).
+
+% Eliza: Primo de
+replace0([I1, I2|_], Input, _, Resp, R):-
+    nth0(I1, Input, Atom1),
+    nth0(I2, Input, Atom2),
+    nth0(0, Resp, X),
+    X == flagPrimoDe,
+    elizaPrimoDe(Atom1, Atom2, R).
+
+% Eliza: Prima de
+replace0([I1, I2|_], Input, _, Resp, R):-
+    nth0(I1, Input, Atom1),
+    nth0(I2, Input, Atom2),
+    nth0(0, Resp, X),
+    X == flagPrimaDe,
+    elizaPrimaDe(Atom1, Atom2, R).
+
+% Eliza: Sobrino de
+replace0([I1, I2|_], Input, _, Resp, R):-
+    nth0(I1, Input, Atom1),
+    nth0(I2, Input, Atom2),
+    nth0(0, Resp, X),
+    X == flagSobrinoDe,
+    elizaSobrinoDe(Atom1, Atom2, R).
+
+% Eliza: Sobrina de (if using a distinct flag and handler)
+replace0([I1, I2|_], Input, _, Resp, R):-
+    nth0(I1, Input, Atom1),
+    nth0(I2, Input, Atom2),
+    nth0(0, Resp, X),
+    X == flagSobrinaDe,
+    elizaSobrinaDe(Atom1, Atom2, R).
+
 
 replace0([I|Index], Input, N, Resp, R):-
 	length(Index, M), M =:= 0,
