@@ -5,6 +5,7 @@
 % Investigar enfermedades
 % Hechos monarios, binarios: sintoma, enfermedad, region, ver datos que agregar
 
+:- include("enfermedades.pl").
 :- include("arbol.pl").
 :- include("adivina.pl").
 
@@ -110,12 +111,16 @@ template([conoces, la, enfermedad, s(_), _], [flagEnfermedad], [3]).
 template([conoces, la, enfermedad, s(_)], [flagEnfermedad], [3]).
 
 % Preguntar por los síntomas de una enfermedad
-template([cuales, son, los, sintomas, de, s(_), _], [flagSintoma], [5]).
-template([cuales, son, los, sintomas, de, s(_)], [flagSintoma], [5]).
+template([cuales, son, los, sintomas, de, la, s(_), _], [flagSintoma], [6]).
+template([cuales, son, los, sintomas, de, el, s(_), _], [flagSintoma], [6]).
+template([cuales, son, los, sintomas, de, la, s(_)], [flagSintoma], [6]).
+template([cuales, son, los, sintomas, de, el, s(_)], [flagSintoma], [6]).
 
 % Diagnosticar la enfermedad a través de un síntoma y una región
-template([tengo , s(_), en, s(_)], [flagDiagnosticoRegion], [1,3]).
-template([tengo , s(_), en, s(_), _], [flagDiagnosticoRegion], [1,3]).
+template([tengo , s(_), en, la, s(_)], [flagDiagnosticoRegion], [1,4]).
+template([tengo , s(_), en, el, s(_)], [flagDiagnosticoRegion], [1,4]).
+template([tengo , s(_), en, la, s(_), _], [flagDiagnosticoRegion], [1,4]).
+template([tengo , s(_), en, el, s(_), _], [flagDiagnosticoRegion], [1,4]).
 
 % Diagnosticar la enfermedad a través de dos sintomas
 template([tengo , s(_), y, s(_)], [flagDiagnosticoDoble], [1,3]).
@@ -263,8 +268,6 @@ is0(redundant).
 % Eliza: Enfermedades
 elizaEnfermedad(X, R):- enfermedad(X), R = ['Conozco', la, enfermedad, X].
 elizaEnfermedad(X, R):- \+enfermedad(X), R = ['No', conozco, la, enfermedad, X].
-enfermedad(rubeola).
-enfermedad(vph).
 
 % Eliza: Mostrar todos los sintomas de una enfermedad
 elizaSintoma(X, R):- 
@@ -295,12 +298,6 @@ elizaDiagnostico(X ,R):- sintoma_region(X,Z), region_afectada(Y,Z), R = ['Puedes
 elizaDiagnostico(X ,R):- sintoma(Z,X), R = ['Es', poco, probable, que, tengas, Z].
 elizaDiagnostico(X ,R):- \+sintoma(_, X), R = ['No', se, que, puedas, tener].
 
-sintoma(rubeola, fiebre).
-sintoma(rubeola, sarpullido).
-sintoma(rubeola, inflamacion).
-sintoma(vph, verrugas).
-sintoma(vph, picazon).
-
 % Eliza: Regiones del cuerpo afectadas
 elizaRegionAfectada(X, R) :-
     region_afectada(X, _),
@@ -310,24 +307,12 @@ elizaRegionAfectada(X, R) :-
 
 elizaRegionAfectada(X , R) :- \+region_afectada(X, _), R = ['No', tengo, informacion, sobre, las, regiones, afectadas].
 
-region_afectada(rubeola, piel).
-region_afectada(rubeola, ganglios).
-region_afectada(vph, genitales).
-
-sintoma_region(sarpullido, piel).
-sintoma_region(inflamacion, ganglios).
-sintoma_region(verrugas, genitales).
-sintoma_region(picazon, genitales).
-
+% Regiones geográficas donde son prevalentes
 elizaArea(X ,R) :-
 	prevalente_en(X, Y),
     R = ['La', X, se, encuentra, principalmente, en, Y].
 
 elizaArea(X ,R) :- \+prevalente_en(X, _), R = ['No', tengo, conocimientos, de, donde, se, encuentra, X].
-
-% Regiones geográficas donde son prevalentes
-prevalente_en(rubeola, america_latina).
-prevalente_en(vph, todo_el_mundo).
 
 % Transmisión
 elizaTransmision(X, R):-
@@ -338,125 +323,106 @@ elizaTransmision(X, R):-
 
 elizaTransmision(X ,R) :- \+transmision(X, _), R = ['No', tengo, conocimientos, de, como, se, transmite, X].
 
-transmision(rubeola, contacto_directo).
-transmision(rubeola, via_respiratoria).
-transmision(vph, contacto_sexual).
-
 % Prevención
 elizaPrevencion(X, R):-
     prevencion(X, Y),
-    R = ['La', X, se, puede, prevenir, de, la, siguiente, forma, Y].
+    R = [X, se, puede, prevenir, de, la, siguiente, forma, Y].
 
 elizaPrevencion(X ,R) :- \+prevencion(X, _), R = ['No', tengo, conocimientos, de, como, se, previene, X].
-
-prevencion(rubeola, vacuna_triple_viral).
-prevencion(vph, vacuna_vph).
-
-% Diagnóstico
-diagnostico(rubeola, examen_sangre).
-diagnostico(vph, papanicolaou).
-
-% Gravedad
-gravedad(rubeola, moderada).
-gravedad(vph, variable).
-
-% Tipo de enfermedad
-tipo_enfermedad(rubeola, viral).
-tipo_enfermedad(vph, viral).
 
 % Árbol genealógico
 
 % Padre de
 elizaPadreDe(X, Y, R) :-
 	padrede(X , Y),
-	R = [X, es, padre, de, Y].
+	R = ['Correcto',X, es, padre, de, Y].
 
-elizaPadreDe(X, Y, R) :- \+padrede(X , Y), R = [X, no, es, padre, de, Y].
+elizaPadreDe(X, Y, R) :- \+padrede(X , Y), R = ['No',X, no, es, padre, de, Y].
 
 % Madre de
 elizaMadreDe(X, Y, R) :-
 	madrede(X , Y),
-	R = [X, es, madre, de, Y].
+	R = ['Correcto',X, es, madre, de, Y].
 
-elizaMadreDe(X, Y, R) :- \+madrede(X , Y), R = [X, no, es, madre, de, Y].
+elizaMadreDe(X, Y, R) :- \+madrede(X , Y), R = ['No',X, no, es, madre, de, Y].
 
 % Hijo de
 elizaHijoDe(X, Y, R) :-
 	hijode(X , Y),
-	R = [X, es, hijo, de, Y].
+	R = ['Correcto',X, es, hijo, de, Y].
 
-elizaHijoDe(X, Y, R) :- \+hijode(X , Y), R = [X, no, es, hijo, de, Y].
+elizaHijoDe(X, Y, R) :- \+hijode(X , Y), R = ['No',X, no, es, hijo, de, Y].
 
 % Hija de
 elizaHijaDe(X, Y, R) :-
 	hijade(X , Y),
-	R = [X, es, hija, de, Y].
+	R = ['Correcto',X, es, hija, de, Y].
 
-elizaHijaDe(X, Y, R) :- \+hijade(X , Y), R = [X, no, es, hija, de, Y].
+elizaHijaDe(X, Y, R) :- \+hijade(X , Y), R = ['No',X, no, es, hija, de, Y].
 
 % Abuelo de
 elizaAbueloDe(X, Y, R) :-
 	abuelode(X, Y),
-	R = [X, es, abuelo, de, Y].
+	R = ['Correcto',X, es, abuelo, de, Y].
 
-elizaAbueloDe(X, Y, R) :- \+abuelode(X , Y), R = [X, no, es, abuelo, de, Y].
+elizaAbueloDe(X, Y, R) :- \+abuelode(X , Y), R = ['No',X, no, es, abuelo, de, Y].
 
 % Abuela de
 elizaAbuelaDe(X, Y, R) :-
 	abuelade(X, Y),
-	R = [X, es, abuela, de, Y].
+	R = ['Correcto',X, es, abuela, de, Y].
 
-elizaAbuelaDe(X, Y, R) :- \+abuelade(X , Y), R = [X, no, es, abuela, de, Y].
+elizaAbuelaDe(X, Y, R) :- \+abuelade(X , Y), R = ['No',X, no, es, abuela, de, Y].
 
 % Hermano de
 elizaHermanoDe(X, Y, R) :-
 	hermanode(X, Y),
-	R = [X, es, hermano, de, Y].
+	R = ['Correcto',X, es, hermano, de, Y].
 
-elizaHermanoDe(X, Y, R) :- \+hermanode(X , Y), R = [X, no, es, hermano, de, Y].
+elizaHermanoDe(X, Y, R) :- \+hermanode(X , Y), R = ['No',X, no, es, hermano, de, Y].
 
 % Hermanda de
 elizaHermanaDe(X, Y, R) :-
 	hermanade(X, Y),
-	R = [X, es, hermana, de, Y].
+	R = ['Correcto',X, es, hermana, de, Y].
 
-elizaHermanaDe(X, Y, R) :- \+hermanade(X , Y), R = [X, no, es, hermana, de, Y].
+elizaHermanaDe(X, Y, R) :- \+hermanade(X , Y), R = ['No',X, no, es, hermana, de, Y].
 
 % Eliza: Tío de
 elizaTioDe(X, Y, R) :-
     tiode(X, Y),
-    R = [X, es, tio, de, Y].
-elizaTioDe(X, Y, R) :- \+tiode(X , Y), R = [X, no, es, tio, de, Y].
+    R = ['Correcto',X, es, tio, de, Y].
+elizaTioDe(X, Y, R) :- \+tiode(X , Y), R = ['No',X, no, es, tio, de, Y].
 
 % Eliza: Tía de
 elizaTiaDe(X, Y, R) :-
     tiade(X, Y),
-    R = [X, es, tia, de, Y].
-elizaTiaDe(X, Y, R) :- \+tiade(X , Y), R = [X, no, es, tia, de, Y].
+    R = ['Correcto',X, es, tia, de, Y].
+elizaTiaDe(X, Y, R) :- \+tiade(X , Y), R = ['No',X, no, es, tia, de, Y].
 
 % Eliza: Primo de
 elizaPrimoDe(X, Y, R) :-
     primode(X, Y),
-    R = [X, es, primo, de, Y].
-elizaPrimoDe(X, Y, R) :- \+primode(X , Y), R = [X, no, es, primo, de, Y].
+    R = ['Correcto',X, es, primo, de, Y].
+elizaPrimoDe(X, Y, R) :- \+primode(X , Y), R = ['No',X, no, es, primo, de, Y].
 
 % Eliza: Prima de
 elizaPrimaDe(X, Y, R) :-
     primade(X, Y),
-    R = [X, es, prima, de, Y].
-elizaPrimaDe(X, Y, R) :- \+primade(X , Y), R = [X, no, es, prima, de, Y].
+    R = ['Correcto',X, es, prima, de, Y].
+elizaPrimaDe(X, Y, R) :- \+primade(X , Y), R = ['No',X, no, es, prima, de, Y].
 
 % Eliza: Sobrino de
 elizaSobrinoDe(X, Y, R) :-
     sobrinode(X, Y),
-    R = [X, es, sobrino, de, Y].
-elizaSobrinoDe(X, Y, R) :- \+sobrinode(X , Y), R = [X, no, es, sobrino, de, Y].
+    R = ['Correcto',X, es, sobrino, de, Y].
+elizaSobrinoDe(X, Y, R) :- \+sobrinode(X , Y), R = ['No',X, no, es, sobrino, de, Y].
 
 % Eliza: Sobrina de
 elizaSobrinaDe(X, Y, R) :-
     sobrinade(X, Y),
-    R = [X, es, sobrina, de, Y].
-elizaSobrinaDe(X, Y, R) :- \+sobrinade(X , Y), R = [X, no, es, sobrina, de, Y].
+    R = ['Correcto',X, es, sobrina, de, Y].
+elizaSobrinaDe(X, Y, R) :- \+sobrinade(X , Y), R = ['No',X, no, es, sobrina, de, Y].
 
 elizaAkinator() :- adivina.
 

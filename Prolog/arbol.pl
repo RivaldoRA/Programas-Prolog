@@ -31,25 +31,38 @@ padrede(jorge, marisol).
 padrede(jorge, rosamaria).
 padrede(jorge, veronica).
 padrede(enrique, rigoberto).
+padrede(enrique, guadalupe).
+padrede(enrique, froylan).
+padrede(enrique, odilon).
+padrede(enrique, leobardo).
 padrede(rigoberto, obey).
 padrede(rigoberto, claudel).
 padrede(rigoberto, brady).
-padrede(enrique, guadalupe).
 padrede(guadalupe, rivaldo).
 padrede(guadalupe, belinda).
+padrede(odilon, lillian).
+padrede(odilon, ximena).
 
 madrede(esmeralda_primera, veronica).
 madrede(esmeralda_primera, esmeralda_segunda).
-madrede(esmeralda_segunda, rivaldo).
-madrede(esmeralda_segunda, belinda).
 madrede(esmeralda_primera, marisol).
 madrede(esmeralda_primera, rosamaria).
 madrede(esmeralda_primera, jorgeluis).
+madrede(esmeralda_segunda, rivaldo).
+madrede(esmeralda_segunda, belinda).
+madrede(rosamaria, jorge_segundo).
+madrede(rosamaria, karen).
+madrede(marisol, abril).
 madrede(josefina, rigoberto).
 madrede(josefina, guadalupe).
+madrede(josefina, froylan).
+madrede(josefina, odilon).
+madrede(josefina, leobardo).
 madrede(teresa, obey).
 madrede(teresa, claudel).
 madrede(teresa, brady).
+madrede(karla, lillian).
+madrede(karla, ximena).
 
 hijode(X,Y) :- hombre(X), (padrede(Y,X) ; madrede(Y, X)).
 hijade(X,Y) :- mujer(X), (padrede(Y,X) ; madrede(Y, X)).
