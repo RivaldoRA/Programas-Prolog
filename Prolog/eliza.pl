@@ -6,6 +6,7 @@
 % Hechos monarios, binarios: sintoma, enfermedad, region, ver datos que agregar
 
 :- include("arbol.pl").
+:- include("adivina.pl").
 
 eliza:-	writeln('Hola , mi nombre es  Eliza tu  chatbot,
 	por favor ingresa tu consulta,
@@ -38,6 +39,16 @@ eliza(Input):- Input == [''],
 eliza(Input):- Input == ['','.'],
 	writeln(''), !.
 
+eliza(Input) :-
+    template(Stim, Resp, _IndStim),
+    match(Stim, Input),
+    nth0(0, Resp, X),
+    X == flagAkinator,
+    !,
+    elizaAkinator(),
+    writeln('El juego ha terminado. En que mas puedo ayudarte ?'),
+    readln(Input1),
+    eliza(Input1).
 
 eliza(Input) :-
 	template(Stim, Resp, IndStim),
@@ -206,6 +217,9 @@ template([s(_), es, sobrino, de, s(_), _], [flagSobrinoDe], [0,4]).
 template([s(_), es, sobrina, de, s(_)], [flagSobrinaDe], [0,4]).
 template([es, s(_), la, sobrina, de, s(_), '?'], [flagSobrinaDe], [1, 5]).
 template([s(_), es, sobrina, de, s(_), _], [flagSobrinaDe], [0,4]).
+
+% Akinator
+template([adivina, mi, personaje], [flagAkinator], []).
 
 
 template([como, estas, tu, '?'], [yo, estoy, bien, ',', gracias, por, preguntar, '.'], []).
@@ -444,6 +458,8 @@ elizaSobrinaDe(X, Y, R) :-
     R = [X, es, sobrina, de, Y].
 elizaSobrinaDe(X, Y, R) :- \+sobrinade(X , Y), R = [X, no, es, sobrina, de, Y].
 
+elizaAkinator() :- adivina.
+
 
 match([],[]).
 match([], _):- true.
@@ -652,13 +668,20 @@ replace0([I1, I2|_], Input, _, Resp, R):-
     X == flagSobrinoDe,
     elizaSobrinoDe(Atom1, Atom2, R).
 
-% Eliza: Sobrina de (if using a distinct flag and handler)
+% Eliza: Sobrina de
 replace0([I1, I2|_], Input, _, Resp, R):-
     nth0(I1, Input, Atom1),
     nth0(I2, Input, Atom2),
     nth0(0, Resp, X),
     X == flagSobrinaDe,
     elizaSobrinaDe(Atom1, Atom2, R).
+
+% Eliza: Akinator
+replace0([_|_], _Input, _, Resp, R) :-
+    nth0(0, Resp, X),
+    X == flagAkinator,
+    !,
+	R = Resp.
 
 
 replace0([I|Index], Input, N, Resp, R):-
