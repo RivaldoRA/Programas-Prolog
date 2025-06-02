@@ -151,6 +151,14 @@ template([como, se, transmite, el, s(_)], [flagTransmision], [4]).
 template([como, se, previene, la, s(_)], [flagPrevencion], [4]).
 template([como, se, previene, el, s(_)], [flagPrevencion], [4]).
 
+% Preguntar por los medicamentos
+template([que, medicamentos, se, usan, para, el, s(_)], [flagMedicamentos], [6]).
+template([que, medicamentos, se, usan, para, la, s(_)], [flagMedicamentos], [6]).
+
+% Preguntar por un especialista
+template([que, doctor, me, podria, ayudar, para, el, s(_)], [flagEspecialista], [7]).
+template([que, doctor, me, podria, ayudar, para, la, s(_)], [flagEspecialista], [7]).
+
 % Árbol genealógico
 
 % Preguntar si es padre de
@@ -329,6 +337,22 @@ elizaPrevencion(X, R):-
     R = [X, se, puede, prevenir, de, la, siguiente, forma, Y].
 
 elizaPrevencion(X ,R) :- \+prevencion(X, _), R = ['No', tengo, conocimientos, de, como, se, previene, X].
+
+% Mediacamentos
+elizaMedicamentos(X, R):-
+    medicamento(X, _),
+    findall(Medicamento, medicamento(X, Medicamento), ListaMedicamentos),
+	atomic_list_concat(ListaMedicamentos, ',', MedicamentosString),
+    R = [X, cuenta, con, los, siguientes, medicamentos, MedicamentosString].
+
+elizaMedicamentos(X ,R) :- \+prevencion(X, _), R = ['No', tengo, conocimientos, de, los, medicamentos, de, X].
+
+% Especialista
+elizaEspecialista(X, R):-
+    especialista(X, Y),
+    R = [X, puedes, visitar, al, siguiente, especialista:, Y].
+
+elizaEspecialista(X ,R) :- \+especialista(X, _), R = ['No', tengo, conocimientos, de, algun, especialista, de, X].
 
 % Árbol genealógico
 
@@ -527,6 +551,20 @@ replace0([I|_], Input, _, Resp, R):-
     nth0(0, Resp, X),
     X == flagPrevencion,
     elizaPrevencion(Atom, R).
+
+% Eliza medicamentos:
+replace0([I|_], Input, _, Resp, R):-
+    nth0(I, Input, Atom),
+    nth0(0, Resp, X),
+    X == flagMedicamentos,
+    elizaMedicamentos(Atom, R).
+
+% Eliza especialistas:
+replace0([I|_], Input, _, Resp, R):-
+    nth0(I, Input, Atom),
+    nth0(0, Resp, X),
+    X == flagEspecialista,
+    elizaEspecialista(Atom, R).
 
 % Árbol genealógico
 

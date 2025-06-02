@@ -25,3 +25,17 @@ gravedad(rubeola, moderada).
 gravedad(vph, variable).
 tipo_enfermedad(rubeola, viral).
 tipo_enfermedad(vph, viral).
+medicamento(rubeola, "vacuna triple viral (spr)").
+medicamento(rubeola, "paracetamol (acetaminofen)").
+medicamento(rubeola, "ibuprofeno").
+medicamento(rubeola, "inmunoglobulina rubeola").
+medicamento(rubeola, "analgesicos otc").
+medicamento(rubeola, "hidratacion oral").
+medicamento(vph, "vacuna contra el vph (gardasil, cervarix, gardasil 9)").
+medicamento(vph, "imiquimod (zyclara)").
+medicamento(vph, "podofilox (condylox)").
+medicamento(vph, "acido tricloroacetico (tca)").
+medicamento(vph, "fluorouracilo topico").
+medicamento(vph, "interferon intralesional").
+especialista(rubeola, "infectologo pediatra").
+especialista(vph, "ginecologo").
