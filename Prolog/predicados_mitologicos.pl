@@ -40,8 +40,3 @@ append([1,2], [3,4], A).
 % Problema: Dado un conjunto de equipos [A, B, C], genera todas las combinaciones posibles de enfrentamientos. 
 
 permutacion(['A','B','C'], B).
-
-
-
-
-
