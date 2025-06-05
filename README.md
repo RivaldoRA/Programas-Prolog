@@ -1132,7 +1132,7 @@ sobrinade(X ,Y) :- mujer(X), (padrede(Z, X) ; madrede(Z, X)), (hermanode(Z, Y) ;
 ## Acertijo de los laboratorios
 Al igual que el acertijo de Einstein, se necesitan crear propiedas únicas para cada categoría (posición, color, especialización, instrumento y bebida) y luego usar la lógica de Prolog para hacer que las pistas encajen
 
-Desafortunadamente mis hechos esten mal, pero no logré encontrar ningun resultado para ninguna de las preguntas
+Desafortunadamente mis hechos esten mal,no logré encontrar ningun resultado para ninguna de las preguntas
 
 ```prolog
 % Acertijo de los Científicos y sus lab Cinco científicos
