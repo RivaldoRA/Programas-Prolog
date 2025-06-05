@@ -3,14 +3,6 @@
 ; 
 ; Descabachamiento 
 
-; Mi intento (fallido)
-(defun desc (elementos)
-    (if (null (cdr elementos))
-        (car elementos)
-        (desc (cdr elementos)) 
-    )
-)
-
 (defun recorre(lista)
     (format t "->~d" (car lista))
     (if lista
@@ -20,12 +12,12 @@
 
 ; Dada una lista solamente imprime los numeros pares de esa lista
 (defun recorre-par(lista)
-
-    (if ( = (mod (car lista) 2) 0) 
-        (format t "->~d" (car lista))
-    )
-
     (if lista
-        (recorre-par (cdr lista)) 
+        (progn
+            (if ( = (mod (car lista) 2) 0) 
+                (format t "->~d" (car lista))
+            )
+            (recorre-par (cdr lista)) 
+        )
     )
 )

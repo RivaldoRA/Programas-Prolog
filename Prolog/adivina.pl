@@ -96,10 +96,10 @@ videojuego(metroid, super_metroid).
 videojuego(super_metroid, samus_aran).
 videojuego(super_metroid, ridley).
 videojuego(super_metroid, mother_brain).
-videojuego(metroid, metroid_prime).
-videojuego(metroid_prime, samus_aran).
-videojuego(metroid_prime, metroid_prime).
-videojuego(metroid_prime, space_pirates).
+videojuego(metroid, metroid_prime_1).
+videojuego(metroid_prime_1, samus_aran).
+videojuego(metroid_prime_1, metroid_prime).
+videojuego(metroid_prime_1, space_pirates).
 videojuego(metroid, metroid_dread).
 videojuego(metroid_dread, samus_aran).
 videojuego(metroid_dread, raven_beak).
@@ -108,34 +108,39 @@ videojuego(metroid_dread, emmi).
 adivina :-
     adivina_videojuego(root).
 
-% Recorre todos los hijos de un nodo
 adivina_videojuego(Nodo) :-
     findall(Hijo, videojuego(Nodo, Hijo), Hijos),
-    Hijos \= [],
-    !,
-    preguntar_hijos(Hijos).
-
-% Si no tiene hijos es un personaje 
-adivina_videojuego(Personaje) :-
-    write("¿Es tu personaje "), write(Personaje), write("? (si/no)"), nl,
-    read1(Respuesta),
-    ( Respuesta = si ->
-        write("Personaje encontrado: "), write(Personaje), write("!"), nl
-    ;   fail
+    (   Hijos \= [] % Si tiene hijos (es una categoría/juego)
+    ->  preguntar_hijos(Hijos) % Preguntar por sus hijos
+    ;   % Si no tiene hijos (es un personaje), preguntar directamente
+        write("¿Es tu personaje "), write(Nodo), write("? (si/no)"), nl,
+        read1(Respuesta),
+        ( Respuesta = si ->
+            write("Personaje encontrado: "), write(Nodo), write("!"), nl
+        ;   fail % Si no es es el personaje, va a ocurri el backtracking para preguntar de nuevo
+        )
     ).
 
-% Pregunta por cada hijo, pero solo si ese hijo tiene hijos
+% Pregunta por cada hijo
 preguntar_hijos([Hijo | Resto]) :-
-    ( videojuego(Hijo, _) ->
-        write("Tu personaje se encuentra en "), write(Hijo), write("? (si/no)"), nl,
+    % Revisar si el nodo tiene hijos, Si los tiene es una categoría / juego en los cuales preguntar
+    (   findall(Nieto, videojuego(Hijo, Nieto), Nietos),
+        Nietos \= []
+    ->  write("Tu personaje se encuentra en "), write(Hijo), write("? (si/no)"), nl,
         read1(Respuesta),
         ( Respuesta = si ->
             adivina_videojuego(Hijo)
-        ;   preguntar_hijos(Resto)
+        ;   preguntar_hijos(Resto)  % Si la respues es 'no', preguntar por el siguiente hermano
         )
-    ;   adivina_videojuego(Hijo) 
+    ;   % Nodo no tiene hijos (es un personaje)
+        write("Tu personaje es "), write(Hijo), write("? (si/no)"), nl,
+        read1(Respuesta),
+        ( Respuesta = si ->
+            write("Personaje encontrado: "), write(Hijo), write("!"), nl
+        ;   preguntar_hijos(Resto) % Si la respuesta es 'no', preguntar por el siguiente hermano
+        )
     ).
-preguntar_hijos([]).
+preguntar_hijos([]). % Caso base: no hay más hermanos a los que preguntar
 
 read1(Atom) :-
     read_string(current_input, "\n", "\r", _, String),

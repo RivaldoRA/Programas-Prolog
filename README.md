@@ -24,6 +24,7 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 
 
 ## Operaciones de área y volúmen en Common Lisp
+Se crearon varias funciones para familiarizarnos con Common Lisp, especialmente con setq, que asigna valores a variables. También nos ayudó a entender cómo se manejan las operaciones matemáticas. En Common Lisp, se usa una notación prefija, donde el operador va antes de los números, como `(* base altura)` en lugar de `base * altura`.
 ```lisp
 ; Áreas
 (defun area-cuadrado(lado)
@@ -105,7 +106,7 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 ```
 
 ## Funciones Primitivas en CLISP
-
+Se investigaron las operaciones primitivas en CLISP, las cuales nos permiten realizar tareas como cálculos matemáticos y lógicos, así como la manipulación de listas y el control del flujo de ejecución.
 ### 1. Operaciones Matemáticas Básicas
 - `+` → Suma
 - `-` → Resta
@@ -163,6 +164,7 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 - `symbolp` → ¿Es un símbolo?
 
 ## Car y Cdr con listas
+Se realizaron ejercicios para comprender cómo manipular listas en Common Lisp utilizando `car` y `cdr`. `car` devuelve el primer elemento de una lista, mientras que `cdr` devuelve el resto de la lista (todo excepto el primer elemento). Combinando estas funciones, podemos extraer elementos específicos, incluso si están anidados profundamente dentro de otras listas
 ```lisp
 ; 1 Problemas con car y cdr
 
@@ -236,9 +238,30 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 (car(cadadr '(((a b c) (d e f)) ((g h i) (j k l)))))
 ```
 
+## Factorial en Common Lisp
+La función `fact` (factorial) calcula el producto de un número entero positivo y todos los enteros positivos menores que él. Su caso base es cuando `n` es 0, devolviendo 1. De lo contrario, multiplica `n` por el factorial de `n-1`.
+```lisp
+(defun fact (n)
+    (if (= n 0)
+        1
+        (* n (fact(- n 1)))
+    )
+)
+```
+
+## Fibonacci en Common Lisp
+La función `fib` (Fibonacci) genera una secuencia donde cada número es la suma de los dos anteriores. Tiene dos casos base: si `n` es menor que 2, devuelve 1. Si no, suma los resultados de `fib` para `n-1` y `n-2`
+```lisp
+(defun fib (n)
+    (if (< n 2)
+        1 
+        (+  (fib(- n 1)) (fib(- n 2)))
+    )
+)
+```
 
 ## Calcular el exponente de un número de manera recursiva
-
+Para calcular el exponente de un número, desarrollé la función `power`, que hace uso de la recursividad. Esta función se basa en la idea de que x <sup>n</sup> es igual a x multiplicado por x<sup>n−1</sup>. La condición base para la recursividad es cuando el exponente (`exp`) es 0, en cuyo caso el resultado es 1. Para la operación de multiplicación recursiva, se definió una función `multiply` que suma `x` consigo mismo `y` veces; su caso base es cuando `y` es 0, devolviendo 0. Así, power llama repetidamente a multiply para obtener el resultado final.
 ```lisp
 (defun multiply (x y)
   (if (= y 0)
@@ -252,7 +275,7 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 ```
 
 ## Calcular una división utilizando restas de manera recursiva
-
+Para realizar una división utilizando únicamente restas, implementé la función `divide` de forma recursiva. Esta función simula la división restando el divisor (`y`) del dividendo (`x`) repetidamente hasta que el dividendo sea menor que el divisor. Cada vez que se realiza una resta, se suma 1 al resultado. La recursión finaliza cuando el dividendo (`x`) es menor que el divisor (`y`), devolviendo 0 como caso base. De esta manera, se cuenta cuántas veces se puede restar el divisor del dividendo.
 ```lisp
 (defun divide (x y)
   (if (< x y)
@@ -261,207 +284,173 @@ Se implementó otra forma de escribir las expresiones utilizando paréntesis par
 
 ```
 
+## Juego "Adivina mi número" 
+Este código del libro `Land of Lisp` implementa un juego de adivinar un número entre 1 y 100 usando una búsqueda binaria. El juego utiliza dos variables globales, `*small*` y `*big*`, para definir el rango de búsqueda actual.
 
-## Lógica de primer orden
-### variables individual, constantes individual, cuantificadores existencial universal, propiedades, relacion , dominio del discruso
+`start-over`: Inicia el juego, estableciendo el rango inicial de 1 a 100 y haciendo la primera suposición.
+`guess-my-number`: Calcula la suposición actual tomando el punto medio del rango actual (`*small*` y `*big*`) 
+`smaller`: Si el número es menor, ajusta el límite superior (`*big*`) para reducir el rango.
+`bigger`: Si el número es mayor, ajusta el límite inferior (`*small*`) para reducir el rango.
 
-La Tierra es un planeta, 
-Constante individiual: Tierra
-Propiedad: Planeta
-Planeta(Tierra)
-
-La Luna no es un planeta
-Constante individual: Luna
-No tiene la propiedad de ser planeta
-¬Planeta(Luna)
-
-La Luna es un satelite
-Constante individual: Luna
-Propiedad: Satélite
-Satelite(Luna)
-
-La Tierra gira alrededor del Sol.
-Constante individual: Tierra y Sol
-Propiedad: Gira alrededor
-Gira_alrededor(Tierra, Sol)
-
-Todo planeta es un satélite.
-Variable individual: Planeta
-Cuantificador universal
-∀xPlaneta(X) ^ Satelite(X)
-∀xP(X) ^ S(X)
-
-Todo planeta gira alrededor del Sol.
-Variable individual: Planeta
-Cuantificador universal
-∀x(Planeta(X) -> Gira(sol))
-∀x(P(X) -> G(s))
-
-Algún planeta gira alrededor de la Luna.
-Variable individual: Planeta
-Cuantificador existencial
-Ǝx(Planeta(X) -> Gira(luna))
-Ǝx(P(X) -> G(l))
-
-Hay por lo menos un satélite.
-Variable individual: Satélite
-Cuantificador existencial
-Ǝx Satelite(X)
-Ǝx S(X)
-
-Todos los perros del vecindario muerden a algún cartero.
-Variable individual: Perro
-Cuantificador universal
-Relación: Morder
-∀x P(X) -> Ǝ(y) ^ m(X,Y)
-
-Hay un cartero al que lo muerden todos los perros.
-Variable individual: Cartero
-Cuantificador existencial
-Relación: Morder
-
-Todos los carteros son mordidos por algún perro
-Variable individual: Cartero
-Cuantificador universal
-Relación: Morder
-
-Hay un perro que muerde a todos los carteros
-Variable individual: Perro
-Cuantificador existencial
-Relación: Morder
-
-Todos los perros que asustan a algún cartero, lo muerden
-Variable individual: Perro
-Cuantificador universal
-Relación: Asustar, Morder
-
-Hay un perro que muerde a todos los perros que muerden a algún cartero
-Variable individual: Perro
-Cuantificador existencial
-Relación: Morder
-
-Hay un solo perro que se muerde a sí mismo
-Variable individual: Perro
-Cuantificador existencial
-Relación: Morder
-
-
-## Operaciones de área y volúmen en Common Lisp con intervención del usuario
+Con cada indicación ("menor" o "mayor"), el juego reduce a la mitad el espacio de búsqueda, acercándose rápidamente a el número.
 ```lisp
-; Áreas
-(defun area-cuadrado()
-    (format t "Ingrese un lado: ")
-    (setq lado (read))
-    (setq resultado (* lado lado))
-    (format t "Área del cuadrado: ~A~%" resultado)
-    (values)
+(defun guess-my-number ()
+    (ash (+ *small* *big*) -1)
 )
 
-(defun area-trapecio ()
-    (format t "Ingrese la base menor: ")
-    (setq base-menor (read))
-
-    (format t "Ingrese la base mayor: ")
-    (setq base-mayor (read))
-
-    (format t "Ingrese la altura: ")
-    (setq altura (read))
-
-    (setq resultado (/ (* altura (+ base-mayor base-menor)) 2))
-    (format t "Área del trapecio: ~A~%" resultado)
-    (values)
+(defun smaller()
+    (setf *big* (1- (guess-my-number)))
+    (guess-my-number)
 )
 
-(defun area-rectangulo ()
-    (format t "Ingrese la altura: ")
-    (setq altura (read))
-
-    (format t "Ingrese la base: ")
-    (setq base (read))
-
-    (setq resultado (* base altura))
-    (format t "Área del rectángulo: ~A~%" resultado)
-    (values)
+(defun bigger()
+    (setf *small* (1+ (guess-my-number)))
+    (guess-my-number)
 )
 
-(defun area-triangulo ()
-    (format t "Ingrese la altura: ")
-    (setq altura (read))
+(defun start-over()
+    (defparameter *small* 1)
+    (defparameter *big* 100)
+    (guess-my-number)
+)
+```
 
-    (format t "Ingrese la base: ")
-    (setq base (read))
-
-    (setq resultado (/ (* base altura) 2)) 
-    (format t "Área del triángulo: ~A~%" resultado)
-    (values)
+## Recorrer listas en Common Lisp
+Estas dos funciones de Common Lisp, `recorre` y `recorre-par`, son ejemplos recursivos diseñados para procesar elementos en una lista. `recorre` itera sobre una lista e imprime cada uno de sus elementos. Por otro lado, `recorre-par` también recorre la lista, pero solo imprime los números pares que encuentra. Ambas funciones demuestran la recursividad llamándose a sí mismas con el "resto" de la lista `((cdr lista))` hasta que la lista está vacía, momento en el que la recursión se detiene.
+```lisp
+(defun recorre(lista)
+    (format t "->~d" (car lista))
+    (if lista
+        (recorre (cdr lista)) 
+    )
 )
 
-(defun area-circulo ()
-    (format t "Ingrese el radio: ")
-    (setq radio (read))
+; Dada una lista solamente imprime los numeros pares de esa lista
+(defun recorre-par(lista)
+    (if lista
+        (progn
+            (if ( = (mod (car lista) 2) 0) 
+                (format t "->~d" (car lista))
+            )
+            (recorre-par (cdr lista)) 
+        )
+    )
+)
+```
 
-    (setq resultado (* pi (* radio radio)))
-    (format t "Área del círculo: ~A~%" resultado)
-    (values)
+## Condicionales en Common Lisp
+Este código del libro `Land of Lisp` define cómo reaccionar si alguien se come tu pudín, usando una variable global `*arch-enemy*`. Las funciones `pudding-eater` (con `cond`) y `pudding-eater-case` (con `case`) asignan un enemigo específico (`stupid-lisp-alien` o `useless-old-johnny`) y una frase según quién sea la `person`, o una genérica si es un `stranger`. Además, se muestran ejemplos de los operadores lógicos `and` (todas las condiciones deben ser verdaderas) y `or` (al menos una condición debe ser verdadera) para combinaciones de verificaciones.
+
+Este código más que nada fue para aprender cómo se implementan las condicionales en Common Lisp, explorando `cond` y `case` para controlar el flujo del programa.
+```lisp
+(defvar *arch-enemy* nil)
+
+(defun pudding-eater (person)
+    (cond   ((eq person 'henry) 
+                    (setf *arch-enemy* 'stupid-lisp-alien)
+                    '(curse you lisp alien - you ate my pudding))
+            ((eq person 'johnny) 
+                    (setf *arch-enemy* 'useless-old-johnny)
+                    '(i hop you choked on my pudding johnny))  
+            (t '(why you eat my pudding stranger ?))
+    )
 )
 
-; Volúmenes
-(defun volumen-cubo ()
-    (format t "Ingrese un lado: ")
-    (setq lado (read))
-
-    (setq resultado (* (* lado lado) lado))
-    (format t "Volumen del cubo: ~A~%" resultado)
-    (values)
+; Usando case
+(defun pudding-eater-case (person)
+    (case person
+        ((henry)    (setf *arch-enemy* 'stupid-lisp-alien)
+                    '(curse you lisp alien - you ate my pudding)) 
+        ((johnny)   (setf *arch-enemy* 'useless-old-johnny)
+                    '(i hope you choked on my pudding johnny))
+        (otherwise  '(why you eat my pudding stranger ?))
+    )
 )
 
-(defun volumen-cilindro ()
-    (format t "Ingrese el radio: ")
-    (setq radio (read))
+; Stealth Conditionals and or, solo se necesita poner una vez para más de dos casos
 
-    (format t "Ingrese la altura: ")
-    (setq altura (read))
+(and (oddp 5) (oddp 7) (oddp 9))
+(or (oddp 5) (oddp 7) (oddp 9))
+```
 
-    (setq resultado (* (* pi (* radio radio)) altura))
-    (format t "Volumen del cilindro: ~A~%" resultado)
-    (values)
+## Ejercicios con condicionales
+Estos códigos en Common Lisp presentan dos funciones prácticas: `sueldo-cond` y `lavadora`. La función `sueldo-cond` calcula el aumento salarial anual de un trabajador basándose en su antigüedad en la empresa, aplicando diferentes porcentajes de incremento según los años de servicio. 
+
+Por otro lado, la función `lavadora` determina el nivel de llenado de agua para una lavadora y su funcionalidad, basándose en el peso de la ropa en libras, indicando si la carga es excesiva o el nivel requerido (mínimo, medio, alto o máximo) junto con una cantidad de litros de agua recomendada.
+
+Estos ejemplos se implementaron para experimentar con las condicionales en Common Lisp
+```lisp
+; 1.- Que calcule el sueldo que le corresponde al trabajador de una
+;empresa que cobra 40.000 euros anuales, el programa debe realizar los
+;cálculos en función de los siguientes criterios:
+
+;• Si lleva más de 10 años en la empresa se le aplica un aumento del 10%.
+;• Si lleva menos de 10 años pero más que 5 se le aplica un aumento del 7%.
+;• Si lleva menos de 5 años pero más que 3 se le aplica un aumento del 5%.
+;• Si lleva menos de 3 años se le aplica un aumento del 3%.()
+
+(defun sueldo-cond (tiempo)
+    (cond 
+        ((> tiempo 10) (princ (* 40000 1.10)))
+        ((and (< tiempo 10) (> tiempo 5)) (princ (* 40000 1.07)))
+        ((and (< tiempo 5) (> tiempo 3)) (princ (* 40000 1.05)))
+        ((< tiempo 3) (princ (* 40000 1.03)))
+    )
 )
 
-(defun volumen-esfera ()
-    (format t "Ingrese el radio: ")
-    (setq radio (read))
-
-    (setq resultado (* (*(/ 4 3) pi) (* (* radio radio) radio)))
-    (format t "Volumen de la esfera: ~A~%" resultado)
-    (values)
+(defun sueldo-if (tiempo)
+  (if (> tiempo 10)
+      (princ (* 40000 1.10))
+      (if (and (< tiempo 10) (> tiempo 5))
+          (princ (* 40000 1.07))
+          (if (and (< tiempo 5) (> tiempo 3))
+              (princ (* 40000 1.05))
+              (if (<= tiempo 3)
+                  (princ (* 40000 1.03))
+                  (princ (40000))
+              )
+          )
+      )
+  )
 )
 
-(defun volumen-cono ()
-    (format t "Ingrese el radio: ")
-    (setq radio (read))
+; 2.- Hacer un algortimo que tome el peso en libras de una cantidad de
+; ropa a lavar en una lavadora y nos devuelva el nivel dependiendo del
+;peso; además nos informe la cantidad de litros de agua que
+;necesitamos. Se sabe que con más de 30 libras la lavadora no funcionara
+;ya que es demasiado peso. Si la ropa pesa 22 ó más libras, el nivel será
+;de máximo; si pesa 15 ó más nivel será de alto; si pesa 8 ó más será un
+;nivel medio o de lo contrario el nivel será minimo
 
-    (format t "Ingrese la altura: ")
-    (setq altura (read))
-
-    (setq resultado (*(*(*(/ 1 3) pi) (* radio radio))altura))
-    (format t "Volumen del cono: ~A~%" resultado)
-    (values)
+(defun lavadora-cond(peso)
+    (cond
+        ((>= peso 30) (princ "Demasiado peso. La lavadora no funcionara."))
+        ((>= peso 22) (princ "Nivel: Maximo. Litros de agua: 70 litros")) 
+        ((>= peso 15) (princ "Nivel: Alto. Litros de agua: 50 litros"))
+        ((>= peso 8) (princ "Nivel: Medio. Litros de agua: 35 litros"))
+        (t (princ "Nivel: Minimo. Litros de agua: 25 litros"))
+    )
 )
 
-(defun volumen-piramide-rectangular ()
-    (format t "Ingrese la área de la base: ")
-    (setq area-base (read))
-
-    (format t "Ingrese la altura: ")
-    (setq altura (read))
-
-    (setq resultado (/ (* area-base altura) 3))
-    (format t "Volumen de la pirámide rectángular: ~A~%" resultado)
-    (values)
+(defun lavadora-if (peso)
+  (if (>= peso 30)
+      (princ "Demasiado peso. La lavadora no funcionara.")
+      (if (>= peso 22)
+          (princ "Nivel: Maximo. Litros de agua: 70 litros")
+          (if (>= peso 15)
+              (princ "Nivel: Alto. Litros de agua: 50 litros")
+              (if (>= peso 8)
+                  (princ "Nivel: Medio. Litros de agua: 35 litros")
+                  (princ "Nivel: Minimo. Litros de agua: 25 litros")
+              )
+          )
+      )
+  )
 )
 ```
 
 ## Árbol de datos en Common Lisp
+Este código define un árbol de datos. La función `adivina-videojuego` realiza un recorrido interactivo y recursivo de este árbol. Pregunta al usuario si su personaje se encuentra en una categoría (compañía, franquicia o juego); si la respuesta es "sí", desciende por ese camino del árbol; si es "no", pasa a la siguiente opción en el mismo nivel. Si llega a un personaje, pregunta si es el buscado. Este proceso se repite hasta que el personaje es identificado o no quedan más opciones, guiando al usuario a través de la estructura de datos.
 ```lisp
 (defparameter *nodes* '(
   (rockstar-games (
@@ -605,7 +594,6 @@ Relación: Morder
   ))
 ))
 
-
 (defun adivina-videojuego (lista)
     (when lista
         (let ((elemento (car lista))) 
@@ -627,5 +615,283 @@ Relación: Morder
         )
     )
 )
+```
+## Operaciones de área y volúmen en Common Lisp con intervención del usuario
+Se trabajó en un código anterior, pero en esta ocasión se implementó la lectura de datos a través del usuario para calcular las áreas y volúmenes
+```lisp
+; Áreas
+(defun area-cuadrado()
+    (format t "Ingrese un lado: ")
+    (setq lado (read))
+    (setq resultado (* lado lado))
+    (format t "Área del cuadrado: ~A~%" resultado)
+    (values)
+)
+
+(defun area-trapecio ()
+    (format t "Ingrese la base menor: ")
+    (setq base-menor (read))
+
+    (format t "Ingrese la base mayor: ")
+    (setq base-mayor (read))
+
+    (format t "Ingrese la altura: ")
+    (setq altura (read))
+
+    (setq resultado (/ (* altura (+ base-mayor base-menor)) 2))
+    (format t "Área del trapecio: ~A~%" resultado)
+    (values)
+)
+
+(defun area-rectangulo ()
+    (format t "Ingrese la altura: ")
+    (setq altura (read))
+
+    (format t "Ingrese la base: ")
+    (setq base (read))
+
+    (setq resultado (* base altura))
+    (format t "Área del rectángulo: ~A~%" resultado)
+    (values)
+)
+
+(defun area-triangulo ()
+    (format t "Ingrese la altura: ")
+    (setq altura (read))
+
+    (format t "Ingrese la base: ")
+    (setq base (read))
+
+    (setq resultado (/ (* base altura) 2)) 
+    (format t "Área del triángulo: ~A~%" resultado)
+    (values)
+)
+
+(defun area-circulo ()
+    (format t "Ingrese el radio: ")
+    (setq radio (read))
+
+    (setq resultado (* pi (* radio radio)))
+    (format t "Área del círculo: ~A~%" resultado)
+    (values)
+)
+
+; Volúmenes
+(defun volumen-cubo ()
+    (format t "Ingrese un lado: ")
+    (setq lado (read))
+
+    (setq resultado (* (* lado lado) lado))
+    (format t "Volumen del cubo: ~A~%" resultado)
+    (values)
+)
+
+(defun volumen-cilindro ()
+    (format t "Ingrese el radio: ")
+    (setq radio (read))
+
+    (format t "Ingrese la altura: ")
+    (setq altura (read))
+
+    (setq resultado (* (* pi (* radio radio)) altura))
+    (format t "Volumen del cilindro: ~A~%" resultado)
+    (values)
+)
+
+(defun volumen-esfera ()
+    (format t "Ingrese el radio: ")
+    (setq radio (read))
+
+    (setq resultado (* (*(/ 4 3) pi) (* (* radio radio) radio)))
+    (format t "Volumen de la esfera: ~A~%" resultado)
+    (values)
+)
+
+(defun volumen-cono ()
+    (format t "Ingrese el radio: ")
+    (setq radio (read))
+
+    (format t "Ingrese la altura: ")
+    (setq altura (read))
+
+    (setq resultado (*(*(*(/ 1 3) pi) (* radio radio))altura))
+    (format t "Volumen del cono: ~A~%" resultado)
+    (values)
+)
+
+(defun volumen-piramide-rectangular ()
+    (format t "Ingrese la área de la base: ")
+    (setq area-base (read))
+
+    (format t "Ingrese la altura: ")
+    (setq altura (read))
+
+    (setq resultado (/ (* area-base altura) 3))
+    (format t "Volumen de la pirámide rectángular: ~A~%" resultado)
+    (values)
+)
+```
+
+## Evaluación con listas en Common Lisp
+Esta fue una evaluación para ver si poniamos atención (supongo). Originalmente solo resolví 6 ejercicios de manera correcta
+
+Estas funciones nos muestran la aplicación de las funciones primitivas, condicionales y recursividad en Common Lisp para manipular listas. 
+
+Funciones como `primer-elemento` o `segundo-elemento` aprovechan primitivas directas (`car`,`cadr`). Otras, como `ultimo-elemento`, `suma-lista`, `elemento-lista` y `eliminar-ocurrencias`, demuestran la recursividad, procesando la lista paso a paso y utilizando condicionales (`if`) para definir el comportamiento en cada etapa y establecer un caso base para detener la recursión. Finalmente, funciones como `numero-elementos`, `invertir-lista`, `enesimo-elemento` y `concatenar-listas` muestran cómo las potentes funciones incorporadas en Lisp (`length`, `reverse`, `nth`, `append`) simplifican tareas comunes de manipulación de listas.
+
+```lisp
+(defparameter *nodes* '(1 2 3 4 5))
+
+; Implementa una función que devuelva el primer elemento de una lista dada.
+(defun primer-elemento (lista)
+    (car lista)
+)
+
+; Escribe una función que devuelva el segundo elemento de una lista.
+(defun segundo-elemento (lista)
+    (cadr lista)
+)
+
+; Escribe una función que devuelva el último elemento de una lista.
+(defun ultimo-elemento (lista)
+    (if lista
+        (ultimo-elemento (cdr lista)) 
+        (car lista)
+    )
+)
+
+; Implementa una función que calcule la cantidad de elementos en una lista.
+(defun numero-elementos (lista)
+    (length lista)
+)
+
+; Crea una función que sume todos los elementos de una lista de números.
+(defun suma-lista (lista)
+    (if lista
+        (+ (car lista) (suma-lista (cdr lista))) ; Suma el primer elemento y recursivamente el resto
+        0 ; Si la lista está vacia regresar 0 (caso base)
+    )
+)
+
+; Escribe una función que determine si un elemento está en una lista.
+(defun elemento-lista (elemento lista)
+    (if lista ; Si la lista no esta vacía continuamos
+        (if (equal elemento (car lista)) ; Si el elemento es el mismo al primer elemento de la lista, imprimimos que si
+            (format t "El elemento '~A' si esta en la lista.~%" elemento)
+            (elemento-lista elemento (cdr lista)) ; Si no es, mandamos la lista sin el primer elemento (la cola)
+        )
+        (format t "El elemento '~A' no esta en la lista.~%" elemento) ; La lista esta vacia y no estaba en la lista
+    )
+)
+
+; Escribe una función para invertir el orden de los elementos de una lista.
+(defun invertir-lista (lista)
+    (reverse lista)
+)
+
+; Implementa una función que elimine todas las ocurrencias de un elemento en una lista.
+(defun eliminar-ocurrencias (elemento lista)
+    (if lista
+        (if (equal elemento (car lista)) ; Verificar si el primer elemento de la lista es el que queremos borrar
+            (eliminar-ocurrencias elemento (cdr lista)) ; Si lo es, mandamos la lista sin la cabeza, la pura cola
+            (cons (car lista) (eliminar-ocurrencias elemento (cdr lista))) ; Si no es, lo incluimos a la nueva lista y de todas formas mandamos la cola
+        )
+    )
+)
+
+; Escribe una función que devuelva el elemento enésimo de una lista.
+(defun enesimo-elemento (lista n)
+    (nth n lista)
+)
+
+; Implementa una función que concatene dos listas.
+(defun concatenar-listas (lista1 lista2)    
+    (append lista1 lista2)
+)
 
 ```
+
+## Lógica de primer orden
+### variables individual, constantes individual, cuantificadores existencial universal, propiedades, relacion , dominio del discruso
+
+La Tierra es un planeta, 
+Constante individiual: Tierra
+Propiedad: Planeta
+Planeta(Tierra)
+
+La Luna no es un planeta
+Constante individual: Luna
+No tiene la propiedad de ser planeta
+¬Planeta(Luna)
+
+La Luna es un satelite
+Constante individual: Luna
+Propiedad: Satélite
+Satelite(Luna)
+
+La Tierra gira alrededor del Sol.
+Constante individual: Tierra y Sol
+Propiedad: Gira alrededor
+Gira_alrededor(Tierra, Sol)
+
+Todo planeta es un satélite.
+Variable individual: Planeta
+Cuantificador universal
+∀xPlaneta(X) ^ Satelite(X)
+∀xP(X) ^ S(X)
+
+Todo planeta gira alrededor del Sol.
+Variable individual: Planeta
+Cuantificador universal
+∀x(Planeta(X) -> Gira(sol))
+∀x(P(X) -> G(s))
+
+Algún planeta gira alrededor de la Luna.
+Variable individual: Planeta
+Cuantificador existencial
+Ǝx(Planeta(X) -> Gira(luna))
+Ǝx(P(X) -> G(l))
+
+Hay por lo menos un satélite.
+Variable individual: Satélite
+Cuantificador existencial
+Ǝx Satelite(X)
+Ǝx S(X)
+
+Todos los perros del vecindario muerden a algún cartero.
+Variable individual: Perro
+Cuantificador universal
+Relación: Morder
+∀x P(X) -> Ǝ(y) ^ m(X,Y)
+
+Hay un cartero al que lo muerden todos los perros.
+Variable individual: Cartero
+Cuantificador existencial
+Relación: Morder
+
+Todos los carteros son mordidos por algún perro
+Variable individual: Cartero
+Cuantificador universal
+Relación: Morder
+
+Hay un perro que muerde a todos los carteros
+Variable individual: Perro
+Cuantificador existencial
+Relación: Morder
+
+Todos los perros que asustan a algún cartero, lo muerden
+Variable individual: Perro
+Cuantificador universal
+Relación: Asustar, Morder
+
+Hay un perro que muerde a todos los perros que muerden a algún cartero
+Variable individual: Perro
+Cuantificador existencial
+Relación: Morder
+
+Hay un solo perro que se muerde a sí mismo
+Variable individual: Perro
+Cuantificador existencial
+Relación: Morder
+
+

@@ -26,15 +26,21 @@
 
 ; Crea una función que sume todos los elementos de una lista de números.
 (defun suma-lista (lista)
-    (if (= (length lista) 1)
-        (princ (car lista))
-        (suma-lista (append (list (+ (car lista) (cadr lista))) (cddr lista)))
+    (if lista
+        (+ (car lista) (suma-lista (cdr lista))) ; Suma el primer elemento y recursivamente el resto
+        0 ; Si la lista está vacia regresar 0 (caso base)
     )
 )
 
 ; Escribe una función que determine si un elemento está en una lista.
-(defun elemento-lista (lista elemento)
-    (if )
+(defun elemento-lista (elemento lista)
+    (if lista ; Si la lista no esta vacía continuamos
+        (if (equal elemento (car lista)) ; Si el elemento es el mismo al primer elemento de la lista, imprimimos que si
+            (format t "El elemento '~A' si esta en la lista.~%" elemento)
+            (elemento-lista elemento (cdr lista)) ; Si no es, mandamos la lista sin el primer elemento (la cola)
+        )
+        (format t "El elemento '~A' no esta en la lista.~%" elemento) ; La lista esta vacia y no estaba en la lista
+    )
 )
 
 ; Escribe una función para invertir el orden de los elementos de una lista.
@@ -43,13 +49,18 @@
 )
 
 ; Implementa una función que elimine todas las ocurrencias de un elemento en una lista.
-(defun eliminar-ocurrencias (lista)
-
+(defun eliminar-ocurrencias (elemento lista)
+    (if lista
+        (if (equal elemento (car lista)) ; Verificar si el primer elemento de la lista es el que queremos borrar
+            (eliminar-ocurrencias elemento (cdr lista)) ; Si lo es, mandamos la lista sin la cabeza, la pura cola
+            (cons (car lista) (eliminar-ocurrencias elemento (cdr lista))) ; Si no es, lo incluimos a la nueva lista y de todas formas mandamos la cola
+        )
+    )
 )
 
 ; Escribe una función que devuelva el elemento enésimo de una lista.
-(defun enesimo-elemento (lista)
-
+(defun enesimo-elemento (lista n)
+    (nth n lista)
 )
 
 ; Implementa una función que concatene dos listas.

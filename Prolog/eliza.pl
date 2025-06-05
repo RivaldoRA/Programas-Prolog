@@ -350,7 +350,7 @@ elizaMedicamentos(X ,R) :- \+prevencion(X, _), R = ['No', tengo, conocimientos, 
 % Especialista
 elizaEspecialista(X, R):-
     especialista(X, Y),
-    R = [X, puedes, visitar, al, siguiente, especialista:, Y].
+    R = [X, puedes, visitar, al, siguiente, especialista, Y].
 
 elizaEspecialista(X ,R) :- \+especialista(X, _), R = ['No', tengo, conocimientos, de, algun, especialista, de, X].
 
